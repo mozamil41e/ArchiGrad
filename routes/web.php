@@ -5,9 +5,6 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SupervisorController;
 use Illuminate\Support\Facades\Route;
 
-
-
-
 Route::get('/', function () {
     return view('home');
 })->name('home');
