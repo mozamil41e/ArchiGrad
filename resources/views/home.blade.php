@@ -11,10 +11,10 @@
 
             <!-- Search Bar -->
             <div class="max-w-2xl mx-auto">
-                <form action="search.html" method="get" class="relative">
+                <form action="{{ route('projects.index') }}" method="get" class="relative">
                     <input
                         type="text"
-                        name="q"
+                        name="search"
                         placeholder="ابحث عن مشروع بالعنوان، الطالب، أو المشرف..."
                         class="w-full px-6 py-4 pr-12 rounded-lg border-2 border-gray-200 focus:border-blue-500 focus:outline-none text-lg shadow-sm"
                     >
@@ -33,7 +33,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Link 1: البحث -->
-                <a href="{{ route('projects.index') }}" class="group block p-6 bg-gradient-to-br from-blue-50 to-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-300">
+                <a wire:navigate href="{{ route('projects.index') }}" class="group block p-6 bg-gradient-to-br from-blue-50 to-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-300">
                     <div class="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg mb-4 group-hover:bg-blue-600 transition">
                         <svg class="w-6 h-6 text-blue-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -44,7 +44,7 @@
                 </a>
 
                 <!-- Link 2: التصنيفات -->
-                <a href="categories.html" class="group block p-6 bg-gradient-to-br from-green-50 to-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-300">
+                <a wire:navigate href="categories.html" class="group block p-6 bg-gradient-to-br from-green-50 to-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-300">
                     <div class="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg mb-4 group-hover:bg-green-600 transition">
                         <svg class="w-6 h-6 text-green-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
@@ -55,7 +55,7 @@
                 </a>
 
                 <!-- Link 3: حول النظام -->
-                <a href="#about" class="group block p-6 bg-gradient-to-br from-purple-50 to-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-300">
+                <a wire:navigate href="#about" class="group block p-6 bg-gradient-to-br from-purple-50 to-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-300">
                     <div class="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-lg mb-4 group-hover:bg-purple-600 transition">
                         <svg class="w-6 h-6 text-purple-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
