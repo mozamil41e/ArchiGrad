@@ -23,7 +23,7 @@ class ProjectFactory extends Factory
             'supervisor_id' => Supervisor::inRandomOrder()->first()->id ?? Supervisor::factory(),
             'title' => $this->faker->sentence(5),
             'description' => $this->faker->paragraph(),
-            'year' => $this->faker->year(),
+            'year' => $this->faker->numberBetween(2000, 2024),
             'grade' => $this->faker->randomElement(['A', 'B+', 'C+', 'C', 'F', 'pending']),
             'is_archiv' => $this->faker->boolean(),
         ];

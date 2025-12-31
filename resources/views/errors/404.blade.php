@@ -23,7 +23,7 @@
 
         <!-- CTAs -->
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="{{ route('home') }}" class="w-full sm:w-auto px-8 py-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition shadow-lg hover:shadow-blue-200 group flex items-center justify-center gap-2">
+            <a href="{{ route('home.reports') }}" class="w-full sm:w-auto px-8 py-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition shadow-lg hover:shadow-blue-200 group flex items-center justify-center gap-2">
                 <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5m12 0l-4-4m4 4l-4 4"></path>
                 </svg>

@@ -35,9 +35,9 @@
                     <h1 class="text-xl font-bold text-blue-600">نظام أرشفة المشاريع</h1>
                 </div>
                 <div class="flex items-center space-x-reverse space-x-6 text-sm">
-                    <a href="{{ route('home') }}" class="text-blue-600 font-semibold hover:text-blue-700 transition">الرئيسية</a>
+                    <a href="{{ route('home.reports') }}" class="text-blue-600 font-semibold hover:text-blue-700 transition">الرئيسية</a>
                     <a href="{{ route('projects.index') }}" class="text-gray-600 hover:text-blue-600 transition">البحث</a>
-                    <a href="categories.html" class="text-gray-600 hover:text-blue-600 transition">التصنيفات</a>
+                    <a href="{{ route('category.reports') }}" class="text-gray-600 hover:text-blue-600 transition">التصنيفات</a>
                     <a href="admin-archive.html" class="text-gray-600 hover:text-blue-600 transition">أرشفة مشروع</a>
                     <a href="admin-users.html" class="text-gray-600 hover:text-blue-600 transition">إدارة المستخدمين</a>
                     <a href="admin-supervisors.html" class="text-gray-600 hover:text-blue-600 transition">إدارة المشرفين</a>

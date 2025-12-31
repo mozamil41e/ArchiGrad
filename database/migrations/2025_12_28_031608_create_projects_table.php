@@ -23,6 +23,8 @@ return new class extends Migration
             $table->date('submission_deadline')->nullable();
             $table->softDeletes();
             $table->timestamps();
+
+            // $table->index('year');
         });
     }
 

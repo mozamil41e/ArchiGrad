@@ -1,5 +1,5 @@
 <x-layout.app>
-    <div x-data="searchApp()" x-init="init()" class="min-h-screen flex flex-col">
+    <div x-data="searchApp()" class="min-h-screen flex flex-col">
 <!-- Page Header with Filters -->
     <div class="bg-white border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -11,13 +11,14 @@
                 </div>
 
                 <!-- Filters Section -->
-                <div class="flex-1">
+                <form method="GET" action="{{ route('projects.index') }}" class="flex-1">
                     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
                         <!-- Search Input -->
                         <div class="md:col-span-2">
                             <input
                                 type="text"
-                                x-model="searchQuery"
+                                name="search"
+                                value="{{ request('search') }}"
                                 placeholder="ابحث بالعنوان..."
                                 class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             >
@@ -26,53 +27,61 @@
                         <!-- Year Filter -->
                         <div>
                             <select
-                                x-model="selectedYear"
+                                name="year"
+                                onchange="this.form.submit()"
                                 class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             >
                                 <option value="">جميع السنوات</option>
-                                <template x-for="(y, index) in years" :key="index">
-                                    <option :value="y" x-text="y"></option>
-                                </template>
+                                @foreach($years as $year)
+                                    <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
+                                        {{ $year }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
 
                         <!-- Department Filter -->
                         <div>
                             <select
-                                x-model="selectedDepartment"
+                                name="department_id"
+                                onchange="this.form.submit()"
                                 class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             >
                                 <option value="">جميع التخصصات</option>
-                                  <template x-for="department in departments" :key="department">
-                                    <option :value="department" x-text="department"></option>
-                                </template>
+                                @foreach($departments as $department)
+                                    <option value="{{ $department->id }}" {{ request('department_id') == $department->id ? 'selected' : '' }}>
+                                        {{ $department->name }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
 
                         <!-- Supervisor Filter -->
                         <div>
                             <select
-                                x-model="selectedSupervisor"
+                                name="supervisor_id"
+                                onchange="this.form.submit()"
                                 class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             >
                                 <option value="">جميع المشرفين</option>
-                                <template x-for="supervisor in supervisors" :key="supervisor">
-                                    <option :value="supervisor" x-text="supervisor"></option>
-                                </template>
-
+                                @foreach($supervisors as $supervisor)
+                                    <option value="{{ $supervisor->id }}" {{ request('supervisor_id') == $supervisor->id ? 'selected' : '' }}>
+                                        {{ $supervisor->name }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
-                </div>
+                </form>
 
                 <!-- Reset Button -->
                 <div class="flex-shrink-0">
-                    <button
-                        @click="resetFilters()"
-                        class="p-3 bg-gray-100 text-gray-700 text-sm rounded-lg hover:bg-gray-400 transition whitespace-nowrap"
+                    <a
+                        href="{{ route('projects.index') }}"
+                        class="block p-3 bg-gray-100 text-gray-700 text-sm rounded-lg hover:bg-gray-400 transition whitespace-nowrap text-center"
                     >
                         إعادة تعيين
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -134,9 +143,9 @@
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 px-4 py-3">
                 <div class="flex items-center justify-between">
                     <div class="text-xs text-gray-600">
-                        عرض <span x-text="startIndex + 1"></span> إلى <span x-text="endIndex"></span> من <span x-text="filteredProjects.length"></span> مشروع
+                        عرض <span x-text="startIndex + 1"></span> إلى <span x-text="endIndex"></span> من <span x-text="total"></span> مشروع
                     </div>
-                    <div class="flex space-x-reverse space-x-2">
+                    <div class="flex items-center space-x-reverse space-x-2">
                         <button
                             @click="previousPage()"
                             :disabled="currentPage === 1"
@@ -145,20 +154,13 @@
                         >
                             السابق
                         </button>
-                        <div class="flex items-center space-x-reverse space-x-1">
-                            <template x-for="page in totalPages" :key="page">
-                                <button
-                                    @click="currentPage = page"
-                                    :class="currentPage === page ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'"
-                                    class="px-2.5 py-1.5 border border-gray-300 rounded-lg text-xs font-medium transition"
-                                    x-text="page"
-                                ></button>
-                            </template>
+                        <div class="text-xs text-gray-600 px-2">
+                            صفحة <span x-text="currentPage"></span> من <span x-text="lastPage"></span>
                         </div>
                         <button
                             @click="nextPage()"
-                            :disabled="currentPage === totalPages"
-                            :class="currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'"
+                            :disabled="currentPage === lastPage"
+                            :class="currentPage === lastPage ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'"
                             class="px-3 py-1.5 bg-white border border-gray-300 rounded-lg text-xs font-medium text-gray-700 transition"
                         >
                             التالي
@@ -182,99 +184,59 @@
     <script>
         function searchApp() {
             return {
-                searchQuery: '',
-                selectedYear: '',
-                selectedDepartment: '',
-                selectedSupervisor: '',
-                currentPage: 1,
-                itemsPerPage: 12,
-                supervisors: [],
-                departments: [],
-                years: [],
+                // Pagination data from server
+                paginationData: @js($projects),
 
-
-                init() {
-                    const currentYear = new Date().getFullYear();
-                    for (let i = 0; i < 10; i++) {
-                        this.years.push((currentYear - i).toString());
-                    }
-                    this.departments = [...new Set(this.projects.map(project => project.department.name))];
-                    this.supervisors = [...new Set(this.projects.map(project => project.supervisor.name))];
+                // Get projects array from paginated data
+                get projects() {
+                    return this.paginationData.data || [];
                 },
 
-                // projects: [
-                //     { id: 1, title: 'نظام إدارة المكتبات الجامعية', student: 'محمد أحمد علي', year: '2024', department: 'علوم الحاسوب', supervisor: 'د. أحمد محمد' },
-                //     { id: 2, title: 'تطبيق ذكي للتعلم الإلكتروني', student: 'فاطمة حسن محمود', year: '2024', department: 'هندسة البرمجيات', supervisor: 'د. فاطمة علي' },
-                //     { id: 3, title: 'نظام كشف الاحتيال في المعاملات المالية', student: 'عمر خالد سعيد', year: '2023', department: 'الذكاء الاصطناعي', supervisor: 'د. محمود حسن' },
-                //     { id: 4, title: 'منصة التجارة الإلكترونية للمنتجات المحلية', student: 'سارة عبدالله إبراهيم', year: '2023', department: 'نظم المعلومات', supervisor: 'د. سارة عبدالله' },
-                //     { id: 5, title: 'تطبيق الواقع المعزز للتعليم الطبي', student: 'أحمد محمد حسن', year: '2024', department: 'علوم الحاسوب', supervisor: 'د. أحمد محمد' },
-                //     { id: 6, title: 'نظام التحكم الآلي في الإضاءة الذكية', student: 'نور الدين يوسف', year: '2022', department: 'الهندسة الكهربائية', supervisor: 'د. محمود حسن' },
-                //     { id: 7, title: 'تطبيق تحليل البيانات الضخمة للتسويق', student: 'ليلى عبدالرحمن', year: '2023', department: 'نظم المعلومات', supervisor: 'د. فاطمة علي' },
-                //     { id: 8, title: 'نظام التعرف على الوجه باستخدام التعلم العميق', student: 'كريم صلاح الدين', year: '2024', department: 'الذكاء الاصطناعي', supervisor: 'د. أحمد محمد' },
-                //     { id: 9, title: 'منصة إدارة المشاريع الرشيقة', student: 'هدى محمود علي', year: '2022', department: 'هندسة البرمجيات', supervisor: 'د. سارة عبدالله' },
-                //     { id: 10, title: 'تطبيق الصحة الإلكترونية للمرضى', student: 'يوسف عبدالله أحمد', year: '2023', department: 'نظم المعلومات', supervisor: 'د. محمود حسن' },
-                //     { id: 11, title: 'نظام إنترنت الأشياء للمنازل الذكية', student: 'مريم حسن خالد', year: '2024', department: 'الهندسة الكهربائية', supervisor: 'د. فاطمة علي' },
-                //     { id: 12, title: 'تطبيق الترجمة الآلية باستخدام الذكاء الاصطناعي', student: 'عبدالرحمن سعيد', year: '2022', department: 'الذكاء الاصطناعي', supervisor: 'د. أحمد محمد' },
-                // ],
-
-                projects: @json($projects),
-
-                get filteredProjects() {
-                    const query = (this.searchQuery || '').toString().toLowerCase();
-                    return (this.projects || []).filter(project => {
-                        const title = (project.title ?? '').toString().toLowerCase();
-
-                        let studentName = '';
-                        if (project.student) {
-                            studentName = typeof project.student === 'string' ? project.student : (project.student.name ?? '');
-                        }
-                        studentName = studentName.toString().toLowerCase();
-
-                        const matchesSearch = !query || title.includes(query) || studentName.includes(query);
-
-                        const matchesYear = !this.selectedYear || project.year === this.selectedYear;
-                        const matchesDepartment = !this.selectedDepartment || (project.department && project.department.name === this.selectedDepartment);
-                        const matchesSupervisor = !this.selectedSupervisor || (project.supervisor && project.supervisor.name === this.selectedSupervisor);
-
-                        return matchesSearch && matchesYear && matchesDepartment && matchesSupervisor;
-                    });
+                // Get current page from server
+                get currentPage() {
+                    return this.paginationData.current_page || 1;
                 },
 
-                get totalPages() {
-                    return Math.ceil(this.filteredProjects.length / this.itemsPerPage);
+                // Get last page from server
+                get lastPage() {
+                    return this.paginationData.last_page || 1;
                 },
 
+                // Get total items from server
+                get total() {
+                    return this.paginationData.total || 0;
+                },
+
+                // Get items per page
+                get perPage() {
+                    return this.paginationData.per_page || 12;
+                },
+
+                // Calculate start index for display
                 get startIndex() {
-                    return (this.currentPage - 1) * this.itemsPerPage;
+                    return this.paginationData.from ? this.paginationData.from - 1 : 0;
                 },
 
+                // Calculate end index for display
                 get endIndex() {
-                    const end = this.currentPage * this.itemsPerPage;
-                    return end > this.filteredProjects.length ? this.filteredProjects.length : end;
+                    return this.paginationData.to || 0;
                 },
 
+                // Display projects (no filtering - done on server)
                 get paginatedProjects() {
-                    return this.filteredProjects.slice(this.startIndex, this.endIndex);
+                    return this.projects;
                 },
 
                 nextPage() {
-                    if (this.currentPage < this.totalPages) {
-                        this.currentPage++;
+                    if (this.paginationData.next_page_url) {
+                        window.location.href = this.paginationData.next_page_url;
                     }
                 },
 
                 previousPage() {
-                    if (this.currentPage > 1) {
-                        this.currentPage--;
+                    if (this.paginationData.prev_page_url) {
+                        window.location.href = this.paginationData.prev_page_url;
                     }
-                },
-
-                resetFilters() {
-                    this.searchQuery = '';
-                    this.selectedYear = '';
-                    this.selectedDepartment = '';
-                    this.selectedSupervisor = '';
-                    this.currentPage = 1;
                 }
             }
         }

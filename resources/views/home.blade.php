@@ -33,7 +33,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Link 1: البحث -->
-                <a href="search.html" class="group block p-6 bg-gradient-to-br from-blue-50 to-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-300">
+                <a href="{{ route('projects.index') }}" class="group block p-6 bg-gradient-to-br from-blue-50 to-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-300">
                     <div class="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg mb-4 group-hover:bg-blue-600 transition">
                         <svg class="w-6 h-6 text-blue-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -72,22 +72,28 @@
     <section class="py-16 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h3 class="text-2xl font-bold text-center text-gray-900 mb-10">إحصائيات النظام</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <!-- Stat 1 -->
                 <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-200 text-center">
-                    <div class="text-4xl font-bold text-blue-600 mb-2">1,247</div>
+                    <div class="text-4xl font-bold text-blue-600 mb-2">{{ $archived_projects }}</div>
                     <div class="text-gray-600">مشروع مؤرشف</div>
                 </div>
 
                 <!-- Stat 2 -->
                 <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-200 text-center">
-                    <div class="text-4xl font-bold text-green-600 mb-2">15</div>
-                    <div class="text-gray-600">تخصص أكاديمي</div>
+                    <div class="text-4xl font-bold text-blue-600 mb-2">{{ $new_projects }}</div>
+                    <div class="text-gray-600">مشروع جديد</div>
                 </div>
 
                 <!-- Stat 3 -->
                 <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-200 text-center">
-                    <div class="text-4xl font-bold text-purple-600 mb-2">10</div>
+                    <div class="text-4xl font-bold text-green-600 mb-2">{{ $total_departments }}</div>
+                    <div class="text-gray-600">تخصص أكاديمي</div>
+                </div>
+
+                <!-- Stat 4 -->
+                <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-200 text-center">
+                    <div class="text-4xl font-bold text-purple-600 mb-2">{{ $distinct_years }}</div>
                     <div class="text-gray-600">سنوات من الأرشفة</div>
                 </div>
             </div>
