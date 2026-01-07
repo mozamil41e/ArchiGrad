@@ -55,10 +55,11 @@ class Index extends Component
 
     public function render()
     {
-        $query = Project::with('supervisor:id,name', 'department');
+        $query = Project::with('supervisor:id,name', 'department:id,name');
 
         if ($this->search) {
-            $query->where('title', 'like', '%' . $this->search . '%');
+            $query->where('title', 'like', '%' . $this->search . '%')
+                ->orWhere('description', 'like', '%' . $this->search . '%');
         }
 
         if ($this->year) {
@@ -83,3 +84,112 @@ class Index extends Component
         return view('livewire.projects.index', compact('projects', 'departments', 'supervisors', 'years'));
     }
 }
+
+
+
+
+// namespace App\Http\Livewire\Projects;
+
+// use Livewire\Component;
+// use App\Models\Project;
+// use App\Models\Department;
+// use App\Models\Supervisor;
+// use Illuminate\Support\Collection;
+
+// class ProjectIndex extends Component
+// {
+//     public string $search = '';
+//     public ?int $year = null;
+//     public ?int $department_id = null;
+//     public ?int $supervisor_id = null;
+
+//     protected const PAGINATION_PER_PAGE = 12;
+//     protected const YEARS_RANGE = 19;
+
+//     public function render()
+//     {
+//         return view('livewire.projects.index', [
+//             'projects' => $this->getFilteredProjects(),
+//             'departments' => $this->getDepartments(),
+//             'supervisors' => $this->getSupervisors(),
+//             'years' => $this->getYears(),
+//         ]);
+//     }
+
+//     private function getFilteredProjects()
+//     {
+//         $query = Project::with([
+//             'supervisor:id,name',
+//             'department:id,name'
+//         ]);
+
+//         $this->applyFilters($query);
+
+//         return $query->paginate(self::PAGINATION_PER_PAGE);
+//     }
+
+//     private function applyFilters($query): void
+//     {
+//         if ($this->hasSearch()) {
+//             $this->applySearchFilter($query);
+//         }
+
+//         if ($this->hasYearFilter()) {
+//             $query->where('year', $this->year);
+//         }
+
+//         if ($this->hasDepartmentFilter()) {
+//             $query->where('department_id', $this->department_id);
+//         }
+
+//         if ($this->hasSupervisorFilter()) {
+//             $query->where('supervisor_id', $this->supervisor_id);
+//         }
+//     }
+
+//     private function applySearchFilter($query): void
+//     {
+//         $searchTerm = "%{$this->search}%";
+
+//         $query->where(function ($q) use ($searchTerm) {
+//             $q->where('title', 'like', $searchTerm)
+//               ->orWhere('description', 'like', $searchTerm);
+//         });
+//     }
+
+//     private function getDepartments(): Collection
+//     {
+//         return Department::orderBy('name')->get(['id', 'name']);
+//     }
+
+//     private function getSupervisors(): Collection
+//     {
+//         return Supervisor::orderBy('name')->get(['id', 'name']);
+//     }
+
+//     private function getYears(): array
+//     {
+//         $currentYear = now()->year;
+//         return range($currentYear, $currentYear - self::YEARS_RANGE);
+//     }
+
+//     private function hasSearch(): bool
+//     {
+//         return !empty($this->search);
+//     }
+
+//     private function hasYearFilter(): bool
+//     {
+//         return !is_null($this->year);
+//     }
+
+//     private function hasDepartmentFilter(): bool
+//     {
+//         return !is_null($this->department_id);
+//     }
+
+//     private function hasSupervisorFilter(): bool
+//     {
+//         return !is_null($this->supervisor_id);
+//     }
+// }

@@ -25,7 +25,9 @@ return new class extends Migration
             $table->softDeletes();
             $table->timestamps();
 
-            // $table->index('year');
+            $table->index('title');
+            $table->index('description');
+            $table->index('year');
         });
     }
 

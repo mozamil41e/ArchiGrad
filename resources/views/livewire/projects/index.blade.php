@@ -110,49 +110,56 @@
         <!-- Results Section -->
         <div wire:loading.class="opacity-50" class="transition-opacity duration-200">
             <!-- Projects Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 @forelse($projects as $project)
                     <a wire:navigate href="{{ route('projects-live.show', $project->id) }}"
-                       class="group bg-white rounded-lg shadow-sm border border-gray-200 p-5 hover:shadow-lg hover:border-blue-300 transition-all duration-300 cursor-pointer">
-                        <!-- Project Title -->
-                        <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition line-clamp-2">
-                            {{ $project->title }}
-                        </h3>
+                       class="group bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-xl hover:border-blue-400 transition-all duration-300 cursor-pointer flex flex-col justify-between">
+                        <div>
+                            <!-- Project Title -->
+                            <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition line-clamp-2">
+                                {{ $project->title }}
+                            </h3>
 
-                        <!-- Student Name -->
-                        <div class="flex items-center text-sm text-gray-600 mb-3">
-                            <svg class="w-4 h-4 ml-1.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                            </svg>
-                            <span>{{ $project->supervisor->name }}</span>
-                        </div>
-
-                        <!-- Project Info Grid -->
-                        <div class="grid grid-cols-2 gap-3 mb-4">
-                            <!-- Year -->
-                            <div class="flex items-center text-sm text-gray-600">
-                                <svg class="w-4 h-4 ml-1.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            <!-- Supervisor Name -->
+                            <div class="flex items-center text-gray-600 mb-4">
+                                <svg class="w-5 h-5 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                 </svg>
-                                <span>{{ $project->year }}</span>
+                                <span class="text-base">{{ $project->supervisor->name }}</span>
+                            </div>
+
+                            <!-- Project Info Grid -->
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <!-- Year -->
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <svg class="w-5 h-5 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span>{{ $project->year }}</span>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Department Badge -->
-                        <div class="flex items-center justify-between">
-                            <span class="px-3 py-1 inline-flex text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                        <!-- Footer Info -->
+                        <div class="flex items-center justify-between pt-5 border-t border-gray-50">
+                            <span class="px-4 py-1.5 inline-flex text-sm font-semibold rounded-full bg-blue-100 text-blue-800">
                                 {{ $project->department->name }}
                             </span>
 
                             <!-- View Details Arrow -->
-                            <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-gray-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                             </svg>
                         </div>
                     </a>
                 @empty
-                    <div class="col-span-full py-12 text-center text-gray-500">
-                        لا توجد مشاريع تطابق معايير البحث
+                    <div class="col-span-full py-20 text-center">
+                        <div class="text-gray-400 mb-4">
+                            <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <p class="text-xl text-gray-500 font-medium">لا توجد مشاريع تطابق معايير البحث</p>
                     </div>
                 @endforelse
             </div>

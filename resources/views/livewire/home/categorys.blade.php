@@ -58,7 +58,7 @@
         <div x-show="activeTab === 'year'" x-transition>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <template x-for="category in yearCategories" :key="category.year">
-                    <a :href="'projects-live?year=' + category.year"
+                    <a wire:navigate :href="'projects-live?year=' + category.year"
                        class="group bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-lg hover:border-blue-300 transition-all duration-300">
                         <div class="text-center">
                             <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mb-4 group-hover:scale-110 transition-transform">
