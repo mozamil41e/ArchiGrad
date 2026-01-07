@@ -10,7 +10,23 @@ class Project extends Model
     /** @use HasFactory<\Database\Factories\ProjectFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'description', // This is 'summary' in the form
+        'department_id',
+        'supervisor_id',
+        'grade',
+        'year',
+        'submission_deadline', // This is 'defenseDate' in the form
+        'is_archiv',
+        'path_file',
+    ];
 
+    protected $casts = [
+        'submission_deadline' => 'date',
+        'year' => 'integer',
+        'is_archiv' => 'boolean',
+    ];
 
     public function supervisor()
     {

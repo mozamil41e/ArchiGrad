@@ -12,6 +12,13 @@ class DepartmentSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Department::factory(5)->create();
+        // \App\Models\Department::factory(5)->create();
+         $departments = [
+            ['name' => 'تقنية المعلومات'],
+            ['name' => 'علوم الحاسوب'],
+            ['name' => 'نظم معلومات'],
+        ];
+
+        \App\Models\Department::insert($departments);
     }
 }
