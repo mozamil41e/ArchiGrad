@@ -1,10 +1,13 @@
-@props(['active' => false])
 
+<a
+wire:navigate.hover
+    {{ $attributes }}
+    @class([
+        'font-semibold transition hover:text-blue-700',
+        'px-4 py-2 bg-pink-300 text-white rounded-lg' => request()->routeIs($active),
+        'text-gray-600' => ! request()->routeIs($active),
+    ])
 
-
-
-<a {{ $attributes }} class="flex items-center gap-3 px-4 py-3 rounded-xl  hover:bg-white/20 transition {{ $active ? 'bg-white/15' : '' }}">
-    <!-- Home -->
-    {{$slot}}
-    
+>
+    {{ $slot }}
 </a>

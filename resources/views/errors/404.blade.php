@@ -23,13 +23,13 @@
 
         <!-- CTAs -->
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="{{ route('home.reports') }}" class="w-full sm:w-auto px-8 py-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition shadow-lg hover:shadow-blue-200 group flex items-center justify-center gap-2">
+            <a href="{{ route('home.page') }}" class="w-full sm:w-auto px-8 py-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition shadow-lg hover:shadow-blue-200 group flex items-center justify-center gap-2">
                 <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5m12 0l-4-4m4 4l-4 4"></path>
                 </svg>
                 <span>العودة للرئيسية</span>
             </a>
-            <a href="{{ route('projects.index') }}" class="w-full sm:w-auto px-8 py-4 bg-white text-gray-700 font-bold border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:text-blue-600 transition flex items-center justify-center gap-2">
+            <a href="{{ route('projects-live.index') }}" class="w-full sm:w-auto px-8 py-4 bg-white text-gray-700 font-bold border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:text-blue-600 transition flex items-center justify-center gap-2">
                 <svg class="w-5 h-5 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>

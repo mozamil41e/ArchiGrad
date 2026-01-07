@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +7,6 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <!-- Google Fonts - Cairo -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,6 +35,7 @@
                 </div>
             </a>
                 <div class="flex items-center space-x-reverse space-x-6 text-sm">
+                    <a wire:navigate href="/" class="text-blue-600 font-semibold hover:text-blue-700 transition">livewire view</a>
                     <a wire:navigate href="{{ route('home.reports') }}" class="text-blue-600 font-semibold hover:text-blue-700 transition">الرئيسية</a>
                     <a wire:navigate href="{{ route('projects.index') }}" class="text-gray-600 hover:text-blue-600 transition">البحث</a>
                     <a wire:navigate href="{{ route('category.reports') }}" class="text-gray-600 hover:text-blue-600 transition">التصنيفات</a>
