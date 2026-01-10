@@ -1,11 +1,7 @@
 <?php
 
-namespace App\Livewire\Projects;
+namespace App\Livewire\Supervisors;
 
-use App\Models\Department;
-use App\Models\Project;
-use App\Models\Supervisor;
-use App\Models\Student;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -157,7 +153,7 @@ class Create extends Component
                 'department_id' => $this->department_id,
                 'year' => $this->year,
                 'submission_deadline' => $this->defenseDate,
-                'file_path' => $pdfPath,
+                'path_file' => $pdfPath,
                 'grade' => $this->grade,
                 'is_archiv' => true,
             ]);
@@ -184,6 +180,8 @@ class Create extends Component
             session()->flash('message', 'تم حفظ المشروع بنجاح!');
 
             return $this->redirectRoute('projects-live.create', navigate: true);
+
+
         } catch (\Exception $e) {
             session()->flash('error', 'حدث خطأ أثناء حفظ المشروع: ' . $e->getMessage());
         }

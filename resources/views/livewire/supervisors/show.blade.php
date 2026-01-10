@@ -170,23 +170,19 @@
         </div> --}}
 
         <!-- Download Section -->
-        @if ($project->file_path) {{-- @unless (empty($project->file_path)) --}}
+        @if ($project->is_archiv) {{-- @unless (empty($project->file_path)) --}}
             <div class="bg-gradient-to-br from-blue-50 to-white rounded-lg shadow-sm border border-blue-200 p-8 mb-6">
                 <div class="flex flex-col md:flex-row items-center justify-between">
                     <div class="mb-4 md:mb-0">
                         <h3 class="text-xl font-bold text-gray-900 mb-2">تحميل ملف المشروع</h3>
                         <p class="text-gray-600">قم بتحميل الملف الكامل للمشروع بصيغة PDF</p>
                     </div>
-                    <a :href="`/storage/${project.file_path}`" download>
-                        <button class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-md hover:shadow-lg">
+                    <button class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-md hover:shadow-lg">
                         <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-
-                            تحميل PDF
-
-                        </button>
-                    </a>
+                        <span>تحميل PDF</span>
+                    </button>
                 </div>
             </div>
         @endif

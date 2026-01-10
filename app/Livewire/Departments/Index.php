@@ -74,7 +74,7 @@ class Index extends Component
         $this->validate($validationRules);
 
         if ($this->isEditMode) {
-            $department = Department::find($this->departmentId);
+            $department = $this->getDepartment($this->departmentId);
             $department->update([
                 'name' => $this->name,
             ]);
@@ -97,9 +97,14 @@ class Index extends Component
 
     public function delete()
     {
-        Department::find($this->departmentId)->delete();
+        $this->getDepartment($this->departmentId)->delete();
         $this->confirmingDeletion = false;
         session()->flash('message', 'تم حذف القسم بنجاح.');
+    }
+
+    public function getDepartment($id)
+    {
+        return Department::find($id);
     }
 
 
@@ -115,7 +120,7 @@ class Index extends Component
                 'students',
             ])
             ->orderBy('name')
-            ->paginate(12);
+            ->paginate(6);
 
         return view('livewire.departments.index', compact('departments'));
     }

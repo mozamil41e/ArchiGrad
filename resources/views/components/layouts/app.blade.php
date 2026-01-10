@@ -55,6 +55,11 @@
                         <x-nav-link href="{{ route('departments-live.index') }}" active="departments-live.index">
                             إدارة الاقسام
                         </x-nav-link>
+
+                        <x-nav-link href="{{ route('supervisors-live.index') }}" active="supervisors-live.index">
+                            إدارة المشرفين
+                        </x-nav-link>
+
                     </div>
 
                     <!-- Mobile Menu Button -->

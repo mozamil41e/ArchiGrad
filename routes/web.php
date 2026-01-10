@@ -19,6 +19,11 @@ use App\Livewire\Departments\Create as DepartmentsCreate;
 use App\Livewire\Departments\Edit as DepartmentsEdit;
 use App\Livewire\Departments\Show as DepartmentsShow;
 
+use App\Livewire\Supervisors\Index as SupervisorsIndex;
+use App\Livewire\Supervisors\Create as SupervisorsCreate;
+use App\Livewire\Supervisors\Edit as SupervisorsEdit;
+use App\Livewire\Supervisors\Show as SupervisorsShow;
+
 
 use Illuminate\Support\Facades\Route;
 
@@ -53,6 +58,19 @@ Route::prefix('departments-live')->name('departments-live.')->group(function () 
     Route::get('/{department}', DepartmentsShow::class)->name('show');
     Route::get('/{department}/edit', DepartmentsEdit::class)->name('edit');
 });
+
+
+Route::prefix('supervisors-live')->name('supervisors-live.')->group(function () {
+    Route::get('/', SupervisorsIndex::class)->name('index');
+    Route::get('/create', SupervisorsCreate::class)->name('create');
+    Route::get('/{supervisor}', SupervisorsShow::class)->name('show');
+    Route::get('/{supervisor}/edit', SupervisorsEdit::class)->name('edit');
+});
+
+
+
+
+
 Route::apiResource('departments', DepartmentController::class);
 Route::apiResource('supervisors', SupervisorController::class);
 Route::apiResource('projects', ProjectController::class);

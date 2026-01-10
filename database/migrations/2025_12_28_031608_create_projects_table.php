@@ -21,7 +21,7 @@ return new class extends Migration
             $table->boolean('is_archiv')->default(false);
             $table->year('year')->nullable();
             $table->date('submission_deadline')->nullable();
-            $table->string('path_file')->nullable();
+            $table->string('file_path')->nullable();
             $table->softDeletes();
             $table->timestamps();
 

@@ -25,7 +25,8 @@ class Show extends Component
 
     public function render()
     {
-        $project = $this->project->with('supervisor', 'department', 'students');
+        $project = $this->project;
+        // dd($project->path_file);
         return view('livewire.projects.show', compact('project'));
     }
 }

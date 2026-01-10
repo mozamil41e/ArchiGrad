@@ -24,8 +24,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h2 class="text-3xl font-bold text-gray-900 mb-2">إدارة الأقسام</h2>
-                    <p class="text-gray-600">إدارة الأقسام الأكاديمية والتخصصات المتاحة في النظام</p>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">إدارة المشرفين</h2>
+                    <p class="text-gray-600">إدارة المشرفين المتاحة في النظام</p>
                 </div>
                 <button
                     wire:click="openModal"
@@ -34,7 +34,7 @@
                     <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
-                    إضافة قسم جديد
+                    إضافة مشرف جديد
                 </button>
             </div>
         </div>
@@ -44,54 +44,51 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
 
         <!-- Search -->
-        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
-            <div class="max-w-md">
-                <div class="relative">
-                    <input
-                        type="text"
-                        wire:model.live.debounce.500ms="search"
-                        placeholder="ابحث عن قسم..."
-                        class="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
+        @if ($supervisors->perPage() < $supervisors->total() OR isset($_GET['search']))
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
+                <div class="max-w-md">
+                    <div class="relative">
+                        <input
+                            type="text"
+                            wire:model.live.debounce.500ms="search"
+                            placeholder="ابحث عن مشرف..."
+                            class="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        >
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
+        @endif
         <!-- Departments Table -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-right">
                     <thead class="bg-gray-50 border-b border-gray-200">
                         <tr>
-                            <th class="px-6 py-4 text-sm font-bold text-gray-700">اسم القسم</th>
-                            <th class="px-6 py-4 text-sm font-bold text-gray-700">عدد المشرفين</th>
+                            <th class="px-6 py-4 text-sm font-bold text-gray-700">اسم المشرف</th>
                             <th class="px-6 py-4 text-sm font-bold text-gray-700">إجمالي المشاريع</th>
-                            <th class="px-6 py-4 text-sm font-bold text-gray-700">عدد الطلاب</th>
                             <th class="px-6 py-4 text-sm font-bold text-gray-700">الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                        @forelse($departments as $dept)
+                        @forelse($supervisors as $supervisor)
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="px-6 py-4">
-                                    <div class="text-sm font-bold text-gray-900">{{ $dept->name }}</div>
+                                    <div class="text-sm font-bold text-gray-900">{{ $supervisor->name }}</div>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-600">{{ $dept->supervisors_count }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-600">{{ $dept->projects_count }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-600">{{ $dept->students_count }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">{{ $supervisor->projects_count }}</td>
                                 <td class="px-6 py-4">
                                     <div class="flex space-x-reverse space-x-2">
-                                        <button wire:click="edit({{ $dept->id }})" class="text-blue-600 hover:text-blue-900 p-1" title="تعديل">
+                                        <button wire:click="edit({{ $supervisor->id }})" class="text-blue-600 hover:text-blue-900 p-1" title="تعديل">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                             </svg>
                                         </button>
-                                        <button wire:click="confirmDelete({{ $dept->id }})" class="text-red-600 hover:text-red-900 p-1" title="حذف">
+                                        <button wire:click="confirmDelete({{ $supervisor->id }})" class="text-red-600 hover:text-red-900 p-1" title="حذف">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                             </svg>
@@ -102,7 +99,7 @@
                         @empty
                             <tr>
                                 <td colspan="5" class="px-6 py-10 text-center text-gray-500">
-                                    لا توجد أقسام مطابقة للبحث
+                                    لا توجد مشرفين مطابقة للبحث
                                 </td>
                             </tr>
                         @endforelse
@@ -115,9 +112,9 @@
                 <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <!-- Results Info -->
                     <div class="text-sm text-gray-500">
-                        عرض <span class="font-semibold text-gray-900">{{ $departments->firstItem() ?? 0 }}</span> إلى
-                        <span class="font-semibold text-gray-900">{{ $departments->lastItem() ?? 0 }}</span> من
-                        <span class="font-semibold text-gray-900">{{ $departments->total() }}</span> قسم
+                        عرض <span class="font-semibold text-gray-900">{{ $supervisors->firstItem() ?? 0 }}</span> إلى
+                        <span class="font-semibold text-gray-900">{{ $supervisors->lastItem() ?? 0 }}</span> من
+                        <span class="font-semibold text-gray-900">{{ $supervisors->total() }}</span> مشرف
                     </div>
 
                     <!-- Navigation Buttons -->
@@ -125,9 +122,9 @@
                         <button
                             wire:click="previousPage"
                             wire:loading.attr="disabled"
-                            @if($departments->onFirstPage()) disabled @endif
+                            @if($supervisors->onFirstPage()) disabled @endif
                             class="inline-flex items-center px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium transition-all duration-200
-                            {{ $departments->onFirstPage() ? 'text-gray-300 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-50 hover:border-blue-300 hover:text-blue-600 shadow-sm' }}"
+                            {{ $supervisors->onFirstPage() ? 'text-gray-300 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-50 hover:border-blue-300 hover:text-blue-600 shadow-sm' }}"
                         >
                             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -136,15 +133,15 @@
                         </button>
 
                         <div class="flex items-center px-4 h-9 bg-gray-50 rounded-lg text-xs font-semibold text-gray-600 border border-gray-100">
-                            صفحة {{ $departments->currentPage() }} من {{ $departments->lastPage() }}
+                            صفحة {{ $supervisors->currentPage() }} من {{ $supervisors->lastPage() }}
                         </div>
 
                         <button
                             wire:click="nextPage"
                             wire:loading.attr="disabled"
-                            @if(!$departments->hasMorePages()) disabled @endif
+                            @if(!$supervisors->hasMorePages()) disabled @endif
                             class="inline-flex items-center px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium transition-all duration-200
-                            {{ !$departments->hasMorePages() ? 'text-gray-300 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-50 hover:border-blue-300 hover:text-blue-600 shadow-sm' }}"
+                            {{ !$supervisors->hasMorePages() ? 'text-gray-300 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-50 hover:border-blue-300 hover:text-blue-600 shadow-sm' }}"
                         >
                             التالي
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -167,11 +164,11 @@
                 <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
                 <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
                 <div class="inline-block align-bottom bg-white rounded-lg text-right overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full p-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4">{{ $isEditMode ? 'تعديل القسم' : 'إضافة قسم جديد' }}</h3>
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">{{ $isEditMode ? 'تعديل المشرف' : 'إضافة مشرف جديد' }}</h3>
                     <form wire:submit.prevent="save">
                         <div class="space-y-4 text-right">
                             <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-1">اسم القسم</label>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">اسم المشرف</label>
                                 <input
                                     type="text"
                                     wire:model="name"
@@ -182,10 +179,28 @@
                                 @error('name') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                             </div>
                         </div>
+
+                        <div class="space-y-4 text-right">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">اسم القسم</label>
+                                <select
+                                    wire:model="department_id"
+                                    class="w-full px-4 py-2 border @error('department_id') border-red-500 @else border-gray-300 @enderror rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                    placeholder="مثال: علوم الحاسوب"
+                                >
+                                    <option value="">اختر القسم</option>
+                                    @foreach($departments as $department)
+                                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('department_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
                         <div class="mt-6 flex justify-end space-x-reverse space-x-3">
                             <button type="button" wire:click="closeModal" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">إلغاء</button>
                             <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                                <span wire:loading.remove wire:target="save">{{ $isEditMode ? 'حفظ التعديلات' : 'إضافة القسم' }}</span>
+                                <span wire:loading.remove wire:target="save">{{ $isEditMode ? 'حفظ التعديلات' : 'إضافة المشرف' }}</span>
                                 <span wire:loading wire:target="save">جاري الحفظ...</span>
                             </button>
                         </div>
@@ -209,9 +224,9 @@
                             </svg>
                         </div>
                         <div class="mt-3 text-center sm:mt-0 sm:mr-4 sm:text-right">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">حذف القسم</h3>
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">حذف المشرف</h3>
                             <div class="mt-2">
-                                <p class="text-sm text-gray-500">هل أنت متأكد من حذف هذا القسم؟ لا يمكن التراجع عن هذا الإجراء وسيتم حذف كافة البيانات المرتبطة.</p>
+                                <p class="text-sm text-gray-500">هل أنت متأكد من حذف هذا المشرف؟ لا يمكن التراجع عن هذا الإجراء وسيتم حذف كافة البيانات المرتبطة.</p>
                             </div>
                         </div>
                     </div>
