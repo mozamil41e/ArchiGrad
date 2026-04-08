@@ -36,9 +36,27 @@
             </a>
         </div>
 
+        <!-- Success Message -->
+        @if (session()->has('message'))
+            <x-messages.success> {{ session('message') }}</x-messages.success>
+        @endif
+
+        <!-- Error Message -->
+        @if (session()->has('error'))
+            <x-messages.erorr>{{ session('error') }}</x-messages.erorr>
+        @endif
+
         <!-- Project Title -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4" x-text="project.title"></h1>
+            <div class="flex items-start justify-between gap-4 mb-4">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 flex-1" x-text="project.title"></h1>
+                <a wire:navigate href="{{ route('projects-live.edit', $project->id) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-sm hover:shadow-md whitespace-nowrap">
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                    تعديل
+                </a>
+            </div>
             <div class="flex flex-wrap gap-2">
                 <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium" x-text="project.department.name"></span>
                 <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium" x-text="'السنة: ' + project.year"></span>
@@ -69,7 +87,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                         </svg>
                                         <span x-text="student.name"></span>
-                                        <span x-text=" - 118025481547"></span>
+                                        <span x-text=" - student.university_number"></span>
                                     </div>
                                 </template>
                             </div>

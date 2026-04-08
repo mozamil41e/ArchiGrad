@@ -114,7 +114,7 @@
                 @forelse($projects as $project)
                     <a wire:navigate href="{{ route('projects-live.show', $project->id) }}"
                        class="group bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-xl hover:border-blue-400 transition-all duration-300 cursor-pointer flex flex-col justify-between">
-                        <div>
+                        <div class="w-60 h-30 mb-4 text-gray-400">
                             <!-- Project Title -->
                             <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition line-clamp-2">
                                 {{ $project->title }}

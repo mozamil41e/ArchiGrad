@@ -36,9 +36,9 @@
               <label for="password" class="block text-sm font-semibold text-gray-700">
                 كلمة المرور
               </label>
-              <a href="#" class="text-xs font-semibold text-blue-600 hover:text-blue-500">
+              {{-- <a href="#" class="text-xs font-semibold text-blue-600 hover:text-blue-500">
                 نسيت كلمة المرور؟
-              </a>
+              </a> --}}
             </div>
             <input
               id="password"
@@ -68,19 +68,29 @@
 
         <div>
           <button
+            wire:loading.attr="disabled"
             type="submit"
-            class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition shadow-lg"
+            class="group relative w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-bold rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition shadow-lg"
           >
-            <span>تسجيل الدخول</span>
+            <!-- نص الزر العادي يظهر عندما لا يكون هناك تحميل -->
+            <span wire:loading.remove>تسجيل الدخول</span>
+
+            <!-- نص التحميل يظهر أثناء التحميل -->
+            <span wire:loading class="flex items-center gap-2">
+              <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+              </svg>
+            </span>
           </button>
         </div>
 
-        <div class="text-center text-sm">
+        {{-- <div class="text-center text-sm">
           <span class="text-gray-600">ليس لديك حساب؟</span>
           <a href="/register" class="font-bold text-blue-600 hover:text-blue-500 mr-1">
             سجل الآن
           </a>
-        </div>
+        </div> --}}
       </form>
     </div>
   </main>

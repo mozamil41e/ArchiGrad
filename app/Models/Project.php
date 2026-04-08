@@ -20,11 +20,11 @@ class Project extends Model
         'submission_deadline', // This is 'defenseDate' in the form
         'is_archiv',
         'file_path',
+        'keywords',
     ];
 
     protected $casts = [
         'submission_deadline' => 'date',
-        'year' => 'integer',
         'is_archiv' => 'boolean',
     ];
 
@@ -40,5 +40,22 @@ class Project extends Model
     public function students()
     {
         return $this->hasMany(Student::class, 'project_id');
+    }
+
+    public function scopeFilter($query, $filters)
+    {
+        return $query
+            ->when(
+                $filters['search'] ?? null,
+                fn($q, $search) =>
+                $q->where(
+                    fn($q) =>
+                    $q->where('title', 'like', "%$search%")
+                        ->orWhere('description', 'like', "%$search%")
+                )
+            )
+            ->when($filters['year'] ?? null, fn($q, $year) => $q->where('year', $year))
+            ->when($filters['department_id'] ?? null, fn($q, $department) => $q->where('department_id', $department))
+            ->when($filters['supervisor_id'] ?? null, fn($q, $supervisor) => $q->where('supervisor_id', $supervisor));
     }
 }

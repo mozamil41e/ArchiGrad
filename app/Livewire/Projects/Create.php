@@ -35,6 +35,45 @@ class Create extends Component
     public $departments = [];
     public $years = [];
 
+
+    public array $existingProjects = [
+        "نظام إدارة مشاريع التخرج",
+        "تطبيق مكتبي لإدارة الطلاب",
+        "نظام متابعة مشاريع بصات"
+    ];
+
+    public string $newTitle = "نظام متابعة مشاريع بصات";
+
+    /**
+     * تحقق من تشابه عنوان المشروع مع المشاريع السابقة
+     *
+     * @param string $newTitle العنوان الجديد
+     * @param array $existingTitles مصفوفة عناوين المشاريع السابقة
+     * @param int $threshold نسبة التشابه المئوية لمنع التكرار (مثلاً 70)
+     * @return array يحتوي على المشاريع المشابهة مع نسبة التشابه
+     */
+    function checkProjectSimilarity(string $newTitle, array $existingTitles, int $threshold = 70): array
+    {
+        $similarProjects = [];
+
+        foreach ($existingTitles as $title) {
+            // استخدام similar_text لحساب نسبة التشابه
+            similar_text($newTitle, $title, $percent);
+
+            // إذا كانت النسبة أكبر من الحد المسموح
+            if ($percent >= $threshold) {
+                $similarProjects[] = [
+                    'existing_title' => $title,
+                    'similarity' => round($percent, 2) // تقريب النسبة
+                ];
+            }
+        }
+
+        empty($similarProjects) ? $similarProjects['pass'] = true :  $similarProjects['pass'] = false;
+
+        return $similarProjects;
+    }
+
     protected function rules()
     {
         $rules = [
@@ -85,6 +124,7 @@ class Create extends Component
         // Load supervisors and departments
         $this->supervisors = Supervisor::all();
         $this->departments = Department::all();
+        $this->existingProjects = Project::pluck('title')->toArray();
 
         // Generate years (current year and 4 previous years)
         $currentYear = date('Y');
@@ -124,14 +164,18 @@ class Create extends Component
 
     public function save()
     {
+
+        if (!$this->checkProjectSimilarity($this->title, $this->existingProjects)['pass']) {
+            session()->flash('error', 'هذا العنوان مشابه لعناوين مشاريع سابقة، يرجى اختيار عنوان آخر.');
+            return $this->redirectRoute('projects-live.create', navigate: true);
+        }
+
         $this->validate();
 
         try {
             // Prepare description (combine summary and keywords)
             $description = $this->summary;
-            // if ($this->keywords) {
-            //     $description .= "\n\nالكلمات المفتاحية: " . $this->keywords;
-            // }
+
 
             // Upload PDF file
             $pdfPath = null;
@@ -143,11 +187,6 @@ class Create extends Component
                     'public'
                 );
             }
-
-            // // Add PDF information to description
-            // if ($pdfPath) {
-            //     $description .= "\n\nملف المشروع: " . $pdfPath;
-            // }
 
             // Create project
             $project = Project::create([

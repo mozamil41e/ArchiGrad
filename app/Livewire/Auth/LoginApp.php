@@ -5,6 +5,7 @@ namespace App\Livewire\Auth;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Validation\ValidationException;
 
 class LoginApp extends Component
@@ -23,8 +24,58 @@ class LoginApp extends Component
 
     public bool $rememberMe = false;
 
+    public array $existingProjects = [
+        "نظام إدارة مشاريع التخرج",
+        "تطبيق مكتبي لإدارة الطلاب",
+        "نظام متابعة مشاريع بصات"
+    ];
+
+    public string $newTitle = "نظام ادارة تزاكر باصات";
+
+    /**
+     * تحقق من تشابه عنوان المشروع مع المشاريع السابقة
+     *
+     * @param string $newTitle العنوان الجديد
+     * @param array $existingTitles مصفوفة عناوين المشاريع السابقة
+     * @param int $threshold نسبة التشابه المئوية لمنع التكرار (مثلاً 70)
+     * @return array يحتوي على المشاريع المشابهة مع نسبة التشابه
+     */
+    function checkProjectSimilarity(string $newTitle, array $existingTitles, int $threshold = 70): array
+    {
+        $similarProjects = [];
+
+        foreach ($existingTitles as $title) {
+            // استخدام similar_text لحساب نسبة التشابه
+            similar_text($newTitle, $title, $percent);
+
+            // إذا كانت النسبة أكبر من الحد المسموح
+            if ($percent >= $threshold) {
+                $similarProjects[] = [
+                    'existing_title' => $title,
+                    'similarity' => round($percent, 2) // تقريب النسبة
+                ];
+            }
+        }
+
+        return $similarProjects; // مصفوفة المشاريع المشابهة
+    }
+
+
+
+
     public function submitForm()
     {
+        // $similar = $this->checkProjectSimilarity($this->newTitle, $this->existingProjects);
+        // return dd($similar);
+        // if (!empty($similar)) {
+        //     echo "هذا العنوان مشابه للعناوين التالية:\n";
+        //     foreach ($similar as $item) {
+        //         echo "- {$item['existing_title']} (تشابه: {$item['similarity']}%)\n";
+        //     }
+        // } else {
+        //     echo "العنوان جديد ويمكن استخدامه!";
+        // }
+
         $this->validate();
 
         if (Auth::attempt(

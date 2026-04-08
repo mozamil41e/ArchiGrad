@@ -64,6 +64,12 @@
                                 إدارة المشرفين
                             </x-nav-link>
 
+
+                <!-- ضع هذا في آخر الـ nav-links -->
+                <div class="flex items-center space-x-reverse space-x-4 border-r border-gray-200 pr-6">
+                    <span class="text-sm text-gray-600">{{ auth()->user()->name }}</span>
+                    <livewire:auth.logout />
+                </div>
                         </div>
 
                         <!-- Mobile Menu Button -->
@@ -96,15 +102,14 @@
                         <x-nav-link href="{{ route('departments-live.index') }}" active="departments-live.index">
                             إدارة الاقسام
                         </x-nav-link>
+
+                        <x-nav-link href="{{ route('supervisors-live.index') }}" active="supervisors-live.index">
+                            إدارة المشرفين
+                        </x-nav-link>
                     </div>
                 </div>
 
 
-                <!-- ضع هذا في آخر الـ nav-links -->
-                <div class="flex items-center space-x-reverse space-x-4 border-r border-gray-200 pr-6">
-                    <span class="text-sm text-gray-600">{{ auth()->user()->email }}</span>
-                    <livewire:auth.logout />
-                </div>
 
             </nav>
         @endauth

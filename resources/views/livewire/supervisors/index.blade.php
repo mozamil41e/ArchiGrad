@@ -29,7 +29,7 @@
         <x-messages.success>{{ session('message') }}</x-messages.success>
     @endif
         <!-- Search -->
-        @if ($supervisors->perPage() < $supervisors->total() OR isset($_GET['search']))
+
             <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
                 <div class="max-w-md">
                     <div class="relative">
@@ -47,7 +47,7 @@
                     </div>
                 </div>
             </div>
-        @endif
+
         <!-- Departments Table -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto">
