@@ -276,11 +276,13 @@
                             wire:model="grade"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('grade') border-red-500 @enderror"
                         >
-                            <option value="">اختر التقدير</option>
-                            <option value="A">ممتاز</option>
-                            <option value="B+">جيد جداً</option>
-                            <option value="C+">جيد</option>
-                            <option value="C">مقبول</option>
+                            <option value="pending">لم يتم التقييم</option>
+                            <option value="A">A</option>
+                            <option value="B+">B+</option>
+                            <option value="C+">C+</option>
+                            <option value="C">C</option>
+                            <option value="F">F</option>
+
                         </select>
                         @error('grade')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

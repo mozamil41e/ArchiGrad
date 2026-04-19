@@ -26,6 +26,9 @@ class Index extends Component
     #[Url(history: true)]
     public $supervisor_id;
 
+    #[Url(history: true)]
+    public $is_active;
+
 
     public $departments;
     public $supervisors;
@@ -52,6 +55,7 @@ class Index extends Component
         $this->year = null;
         $this->department_id = null;
         $this->supervisor_id = null;
+        $this->is_active = null;
         $this->resetPage();
     }
 
@@ -64,6 +68,7 @@ class Index extends Component
                 'year' => $this->year,
                 'department_id' => $this->department_id,
                 'supervisor_id' => $this->supervisor_id,
+                'is_archiv' => $this->is_active,
             ])
             ->paginate(12)
             ->withQueryString();

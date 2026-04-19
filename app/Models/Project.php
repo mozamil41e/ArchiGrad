@@ -50,12 +50,14 @@ class Project extends Model
                 fn($q, $search) =>
                 $q->where(
                     fn($q) =>
-                    $q->where('title', 'like', "%$search%")
+                    $q->where('id', $search)
+                        ->orWhere('title', 'like', "%$search%")
                         ->orWhere('description', 'like', "%$search%")
                 )
             )
             ->when($filters['year'] ?? null, fn($q, $year) => $q->where('year', $year))
             ->when($filters['department_id'] ?? null, fn($q, $department) => $q->where('department_id', $department))
-            ->when($filters['supervisor_id'] ?? null, fn($q, $supervisor) => $q->where('supervisor_id', $supervisor));
+            ->when($filters['supervisor_id'] ?? null, fn($q, $supervisor) => $q->where('supervisor_id', $supervisor))
+            ->when(isset($filters['is_archiv']) && $filters['is_archiv'] !== '', fn($q) => $q->where('is_archiv', $filters['is_archiv']));
     }
 }

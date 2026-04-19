@@ -50,12 +50,30 @@
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
             <div class="flex items-start justify-between gap-4 mb-4">
                 <h1 class="text-3xl md:text-4xl font-bold text-gray-900 flex-1" x-text="project.title"></h1>
-                <a wire:navigate href="{{ route('projects-live.edit', $project->id) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-sm hover:shadow-md whitespace-nowrap">
-                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                    </svg>
-                    تعديل
-                </a>
+                <div class="flex items-center gap-2">
+                    <a wire:navigate href="{{ route('projects-live.edit', $project->id) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-sm hover:shadow-md whitespace-nowrap">
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                        تعديل
+                    </a>
+
+                    @if($project->is_archiv)
+                        <button wire:click="unarchiveProject" class="inline-flex items-center px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition shadow-sm hover:shadow-md whitespace-nowrap">
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                            </svg>
+                            إلغاء الأرشفة
+                        </button>
+                    @else
+                        <button wire:click="archiveProject" class="inline-flex items-center px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition shadow-sm hover:shadow-md whitespace-nowrap">
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+                            </svg>
+                            أرشفة
+                        </button>
+                    @endif
+                </div>
             </div>
             <div class="flex flex-wrap gap-2">
                 <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium" x-text="project.department.name"></span>
@@ -68,44 +86,45 @@
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
                 <h2 class="text-2xl font-bold text-gray-900 mb-6">معلومات المشروع</h2>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Student Name -->
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0">
-                            <div class="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-lg">
-                                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="mr-4">
-                            <p class="text-sm font-medium text-gray-500 mb-2">الطلاب</p>
-                            <div class="flex flex-wrap gap-2">
-                                <template x-for="student in project.students" :key="student.id">
-                                    <div class="inline-flex items-center px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-semibold border border-blue-100 shadow-sm">
-                                        <svg class="w-3.5 h-3.5 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                        </svg>
-                                        <span x-text="student.name"></span>
-                                        <span x-text=" - student.university_number"></span>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Students -->
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 border-b border-gray-100 pb-2">فريق المشروع (الطلاب)</h3>
+                        <div class="flex flex-col gap-3">
+                            <template x-for="student in project.students" :key="student.id">
+                                <div class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-blue-400 hover:ring-1 hover:ring-blue-400 hover:shadow-md transition-all group">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center ml-3 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-bold text-gray-900" x-text="student.name"></p>
+                                            <p class="text-[11px] text-gray-500 mt-0.5">طالب / باحث</p>
+                                        </div>
                                     </div>
-                                </template>
-                            </div>
+                                    <div class="text-left">
+                                        <span class="inline-flex items-center px-2.5 py-1 bg-gray-50 text-gray-700 text-xs font-bold rounded-lg font-mono border border-gray-200 shadow-sm" x-text="student.university_number"></span>
+                                    </div>
+                                </div>
+                            </template>
                         </div>
                     </div>
 
                     <!-- Supervisor -->
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0">
-                            <div class="flex items-center justify-center w-10 h-10 bg-green-100 rounded-lg">
-                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 border-b border-gray-100 pb-2">المشرف الأكاديمي</h3>
+                        <div class="flex items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-green-400 hover:ring-1 hover:ring-green-400 hover:shadow-md transition-all group">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-green-50 text-green-600 flex items-center justify-center ml-3 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                 </svg>
                             </div>
-                        </div>
-                        <div class="mr-4">
-                            <p class="text-sm font-medium text-gray-500">المشرف</p>
-                            <p class="text-lg text-gray-900 font-semibold" x-text="project.supervisor.name"></p>
+                            <div>
+                                <p class="text-base font-bold text-gray-900" x-text="project.supervisor.name"></p>
+                                <p class="text-xs text-gray-500 mt-0.5">أستاذ المادة / المشرف</p>
+                            </div>
                         </div>
                     </div>
 

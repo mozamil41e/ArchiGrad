@@ -12,96 +12,116 @@
                 </button>
             </div> -->
 
-            <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+
+
+            <!-- Header Section (Title & Add Button) -->
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
                 <!-- Title Section -->
                 <div class="flex-shrink-0">
                     <h2 class="text-2xl font-bold text-gray-900 mb-1">البحث عن المشاريع</h2>
                     <p class="text-sm text-gray-600">ابحث في قاعدة بيانات مشاريع التخرج</p>
                 </div>
 
-                <!-- Filters Section -->
-                <div class="flex-1">
-                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
-                        <!-- Search Input -->
-                        <div class="md:col-span-2" wire:key="filter-search">
-                            <input
-                                type="text"
-                                wire:model.live.debounce.800ms="search"
-                                placeholder="ابحث بالعنوان..."
-                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            >
-                        </div>
-
-                        <!-- Year Filter -->
-                        <div wire:key="filter-year">
-                            <select
-                                wire:model.live="year"
-                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            >
-                                <option value="">جميع السنوات</option>
-                                @foreach($years as $y)
-                                    <option value="{{ $y }}">{{ $y }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- Department Filter -->
-                        <div wire:key="filter-department">
-                            <select
-                                wire:model.live="department_id"
-                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            >
-                                <option value="">جميع التخصصات</option>
-                                @foreach($departments as $department)
-                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- Supervisor Filter -->
-                        <div wire:key="filter-supervisor">
-                            <select
-                                wire:model.live="supervisor_id"
-                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            >
-                                <option value="">جميع المشرفين</option>
-                                @foreach($supervisors as $supervisor)
-                                    <option value="{{ $supervisor->id }}">{{ $supervisor->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Reset Button -->
-                <div class="flex-shrink-0">
-                    <button
-                        wire:click="resetFilters"
-                        class="p-3 bg-gray-100 text-gray-700 text-sm rounded-lg hover:bg-gray-400 transition whitespace-nowrap"
-                    >
-                        إعادة تعيين
-                    </button>
-                </div>
-
-
                 <!-- Add Project Button -->
                 <div class="flex-shrink-0">
-
-
-                <button
-                    wire:navigate
-                    href="{{ route('projects-live.create') }}"
-                class="p-3 inline-flex items-center  bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-800 transition shadow-md"
-                >
-                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                    </svg>
-                إضافة مشروع
-                </button>
+                    <button
+                        wire:navigate
+                        href="{{ route('projects-live.create') }}"
+                        class="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-sm"
+                    >
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        إضافة مشروع
+                    </button>
                 </div>
-
-
             </div>
+
+            <!-- Filters Section -->
+            <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 items-end">
+                    <!-- Search Input -->
+                    <div wire:key="filter-search" class="sm:col-span-2 md:col-span-1 lg:col-span-1">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">بحث</label>
+                        <input
+                            type="text"
+                            wire:model.live.debounce.800ms="search"
+                            placeholder="ابحث بالعنوان..."
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
+                        >
+                    </div>
+
+                    <!-- Year Filter -->
+                    <div wire:key="filter-year">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">السنة</label>
+                        <select
+                            wire:model.live="year"
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
+                        >
+                            <option value="">جميع السنوات</option>
+                            @foreach($years as $y)
+                                <option value="{{ $y }}">{{ $y }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Department Filter -->
+                    <div wire:key="filter-department">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">التخصص</label>
+                        <select
+                            wire:model.live="department_id"
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
+                        >
+                            <option value="">جميع التخصصات</option>
+                            @foreach($departments as $department)
+                                <option value="{{ $department->id }}">{{ $department->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Supervisor Filter -->
+                    <div wire:key="filter-supervisor">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">المشرف</label>
+                        <select
+                            wire:model.live="supervisor_id"
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
+                        >
+                            <option value="">جميع المشرفين</option>
+                            @foreach($supervisors as $supervisor)
+                                <option value="{{ $supervisor->id }}">{{ $supervisor->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div wire:key="filter-status">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">حالة المشروع</label>
+                        <select
+                            wire:model.live="is_active"
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
+                        >
+                            <option value="">جميع المشاريع</option>
+                            <option value="0">المشاريع النشطة</option>
+                            <option value="1">المشاريع المؤرشفة</option>
+                        </select>
+                    </div>
+
+                    <!-- Reset Button -->
+                    <div class="flex items-center">
+                        <button
+                            wire:click="resetFilters"
+                            class="w-full inline-flex items-center justify-center px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                        >
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                            إعادة تعيين
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     </div>
 

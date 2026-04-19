@@ -128,7 +128,7 @@ class Edit extends Component
             'year' => 'required|string',
             'department_id' => 'required|exists:departments,id',
             'defenseDate' => 'required|date',
-            'grade' => 'required|in:A,B+,C+,C',
+            'grade' => 'required|in:A,B+,C+,C,F,pending',
             // 'keywords' => 'required|string',
             'pdfFile' => $this->projectId ? 'nullable|mimes:pdf|max:10240' : 'required|mimes:pdf|max:10240',
         ]);
