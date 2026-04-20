@@ -10,6 +10,9 @@
         <!-- Tailwind CSS -->
         <script src="https://cdn.tailwindcss.com"></script>
 
+        <!-- SweetAlert2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
         <!-- Google Fonts - Cairo -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,14 +32,14 @@
     </head>
     <body>
 
-        @auth
+
 
 
             <!-- Navigation Bar -->
             <nav x-data="{ open: false }" class="bg-white shadow-sm border-b border-gray-200">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between items-center h-16">
-                        <a wire:navigate href="{{ route('home.reports') }}">
+                        <a wire:navigate href="{{ route('home.page') }}">
                             <div class="flex items-center">
                                 <h1 class="text-xl font-bold text-pink-500">نظام أرشفة المشاريع</h1>
                             </div>
@@ -55,7 +58,7 @@
                             <x-nav-link href="{{ route('home.categorys') }}" active="home.categorys">
                                 التصنيفات
                             </x-nav-link>
-
+                        @auth
                             <x-nav-link href="{{ route('departments-live.index') }}" active="departments-live.index">
                                 إدارة الاقسام
                             </x-nav-link>
@@ -64,12 +67,20 @@
                                 إدارة المشرفين
                             </x-nav-link>
 
+                            <!-- ضع هذا في آخر الـ nav-links -->
+                            <div class="flex items-center space-x-reverse space-x-4 border-r border-gray-200 pr-6">
+                                <span class="text-sm text-gray-600">{{ auth()->user()->name }}</span>
+                                <livewire:auth.logout />
+                            </div>
 
-                <!-- ضع هذا في آخر الـ nav-links -->
-                <div class="flex items-center space-x-reverse space-x-4 border-r border-gray-200 pr-6">
-                    <span class="text-sm text-gray-600">{{ auth()->user()->name }}</span>
-                    <livewire:auth.logout />
-                </div>
+                        @endauth
+
+                        @guest('web')
+                            <a href="{{ route('login') }}" class="block w-full text-center px-4 py-2 text-white bg-gray-900 hover:bg-gray-800 rounded-md transition">
+                                تسجيل الدخول
+                            </a>
+                        @endguest
+
                         </div>
 
                         <!-- Mobile Menu Button -->
@@ -99,20 +110,28 @@
                             التصنيفات
                         </x-nav-link>
 
-                        <x-nav-link href="{{ route('departments-live.index') }}" active="departments-live.index">
-                            إدارة الاقسام
-                        </x-nav-link>
+                        @guest('web')
+                            <a href="{{ route('login') }}" class="block w-full text-center px-4 py-2 text-white bg-gray-900 hover:bg-gray-800 rounded-md transition">
+                                تسجيل الدخول
+                            </a>
+                        @endguest
 
-                        <x-nav-link href="{{ route('supervisors-live.index') }}" active="supervisors-live.index">
-                            إدارة المشرفين
-                        </x-nav-link>
+                        @auth
+                            <x-nav-link href="{{ route('departments-live.index') }}" active="departments-live.index">
+                                إدارة الاقسام
+                            </x-nav-link>
+
+                            <x-nav-link href="{{ route('supervisors-live.index') }}" active="supervisors-live.index">
+                                إدارة المشرفين
+                            </x-nav-link>
+                        @endauth
                     </div>
                 </div>
 
 
 
             </nav>
-        @endauth
+
 
 
         {{ $slot }}

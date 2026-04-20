@@ -124,17 +124,28 @@
                         </button>
                     </div>
 
-                    <div class="space-y-3">
+                    <div class="space-y-4">
                         @foreach($students as $index => $student)
-                            <div class="flex items-start gap-2" wire:key="student-{{ $index }}">
+                            <div class="flex items-start gap-4" wire:key="student-{{ $index }}">
                                 <div class="flex-1">
                                     <input
                                         type="text"
-                                        wire:model="students.{{ $index }}"
-                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('students.'.$index) border-red-500 @enderror"
+                                        wire:model="students.{{ $index }}.name"
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('students.'.$index.'.name') border-red-500 @enderror"
                                         placeholder="أدخل اسم الطالب {{ $index + 1 }}"
                                     >
-                                    @error('students.'.$index)
+                                    @error('students.'.$index.'.name')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="flex-1">
+                                    <input
+                                        type="text"
+                                        wire:model="students.{{ $index }}.university_number"
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('students.'.$index.'.university_number') border-red-500 @enderror"
+                                        placeholder="الرقم الجامعي"
+                                    >
+                                    @error('students.'.$index.'.university_number')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -238,77 +249,10 @@
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
-
-                    <!-- Grade -->
-                    <div>
-                        <label for="grade" class="block text-sm font-semibold text-gray-700 mb-2">
-                            التقدير <span class="text-red-500">*</span>
-                        </label>
-                        <select
-                            id="grade"
-                            wire:model="grade"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('grade') border-red-500 @enderror"
-                        >
-                            <option value="">اختر التقدير</option>
-                            <option value="A">ممتاز</option>
-                            <option value="B+">جيد جداً</option>
-                            <option value="C+">جيد</option>
-                            <option value="C">مقبول</option>
-                        </select>
-                        @error('grade')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
                 </div>
 
-                <!-- Keywords -->
-                <div class="mb-6">
-                    <label for="keywords" class="block text-sm font-semibold text-gray-700 mb-2">
-                        الكلمات المفتاحية <span class="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="keywords"
-                        wire:model="keywords"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('keywords') border-red-500 @enderror"
-                        placeholder="أدخل الكلمات المفتاحية مفصولة بفواصل (مثال: تعلم آلي, قواعد بيانات, تطبيقات ويب)"
-                    >
-                    @error('keywords')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
 
-                <!-- File Upload -->
-                <div class="mb-8">
-                    <label for="pdfFile" class="block text-sm font-semibold text-gray-700 mb-2">
-                        ملف المشروع (PDF) <span class="text-red-500">*</span>
-                    </label>
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition @error('pdfFile') border-red-500 @enderror">
-                        <input
-                            type="file"
-                            id="pdfFile"
-                            wire:model="pdfFile"
-                            accept=".pdf"
-                            class="hidden"
-                        >
-                        <label for="pdfFile" class="cursor-pointer">
-                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                            </svg>
-                            <p class="mt-2 text-sm text-gray-600">
-                                <span class="font-semibold text-blue-600 hover:text-blue-700">اضغط لاختيار ملف</span>
-                                أو اسحب الملف هنا
-                            </p>
-                            <p class="mt-1 text-xs text-gray-500">PDF فقط (الحد الأقصى: 10MB)</p>
-                        </label>
-                        @if ($pdfFile)
-                            <p class="mt-3 text-sm text-green-600 font-medium">تم اختيار: {{ $pdfFile->getClientOriginalName() }}</p>
-                        @endif
-                    </div>
-                    @error('pdfFile')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
+
             </div>
             @endif
 

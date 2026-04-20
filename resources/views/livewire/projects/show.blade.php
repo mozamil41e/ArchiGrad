@@ -4,7 +4,7 @@
             <nav class="flex" aria-label="Breadcrumb">
                 <ol class="flex items-center space-x-reverse space-x-2">
                     <li>
-                        <a wire:navigate href="{{ route('home.reports') }}" class="text-gray-500 hover:text-blue-600 transition">الرئيسية</a>
+                        <a wire:navigate href="{{ route('home.page') }}" class="text-gray-500 hover:text-blue-600 transition">الرئيسية</a>
                     </li>
                     <li>
                         <span class="text-gray-400 mx-2">/</span>
@@ -38,48 +38,85 @@
 
         <!-- Success Message -->
         @if (session()->has('message'))
-            <x-messages.success> {{ session('message') }}</x-messages.success>
+            <div wire:key="msg-success-{{ uniqid() }}">
+                <x-messages.success> {{ session('message') }}</x-messages.success>
+            </div>
         @endif
 
         <!-- Error Message -->
         @if (session()->has('error'))
-            <x-messages.erorr>{{ session('error') }}</x-messages.erorr>
+            <div wire:key="msg-error-{{ uniqid() }}">
+                <x-messages.erorr>{{ session('error') }}</x-messages.erorr>
+            </div>
         @endif
 
-        <!-- Project Title -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
-            <div class="flex items-start justify-between gap-4 mb-4">
-                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 flex-1" x-text="project.title"></h1>
-                <div class="flex items-center gap-2">
-                    <a wire:navigate href="{{ route('projects-live.edit', $project->id) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-sm hover:shadow-md whitespace-nowrap">
-                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                        </svg>
-                        تعديل
-                    </a>
+        @auth
+            <!-- Project Title -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
+                <div class="flex items-start justify-between gap-4 mb-4">
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 flex-1" x-text="project.title"></h1>
+                    <div class="flex items-center gap-2">
+                        <a wire:navigate href="{{ route('projects-live.edit', $project->id) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-sm hover:shadow-md whitespace-nowrap">
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                            تعديل
+                        </a>
 
-                    @if($project->is_archiv)
-                        <button wire:click="unarchiveProject" class="inline-flex items-center px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition shadow-sm hover:shadow-md whitespace-nowrap">
-                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
-                            </svg>
-                            إلغاء الأرشفة
-                        </button>
-                    @else
-                        <button wire:click="archiveProject" class="inline-flex items-center px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition shadow-sm hover:shadow-md whitespace-nowrap">
-                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
-                            </svg>
-                            أرشفة
-                        </button>
-                    @endif
+                        @if($project->is_archiv)
+                            <button type="button" @click="
+                                Swal.fire({
+                                    title: 'تأكيد الإلغاء',
+                                    text: 'هل أنت متأكد من أنك تريد إلغاء أرشفة هذا المشروع؟',
+                                    icon: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#16a34a',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'نعم، قم بالإلغاء',
+                                    cancelButtonText: 'تراجع'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        $wire.unarchiveProject();
+                                    }
+                                })
+                            " wire:key="unarchive-btn" class="inline-flex items-center px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition shadow-sm hover:shadow-md whitespace-nowrap">
+                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                                </svg>
+                                إلغاء الأرشفة
+                            </button>
+                        @else
+                            <button type="button" @click="
+                                Swal.fire({
+                                    title: 'تأكيد الأرشفة',
+                                    text: 'هل أنت متأكد من أنك تريد أرشفة هذا المشروع؟',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#4b5563',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'نعم، قم بالأرشفة',
+                                    cancelButtonText: 'تراجع'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        $wire.archiveProject();
+                                    }
+                                })
+                            " wire:key="archive-btn" class="inline-flex items-center px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition shadow-sm hover:shadow-md whitespace-nowrap">
+                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+                                </svg>
+                                أرشفة
+                            </button>
+                        @endif
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium" x-text="project.department.name"></span>
+                    <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium" x-text="'السنة: ' + project.year"></span>
                 </div>
             </div>
-            <div class="flex flex-wrap gap-2">
-                <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium" x-text="project.department.name"></span>
-                <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium" x-text="'السنة: ' + project.year"></span>
-            </div>
-        </div>
+
+        @endauth
 
         <!-- Project Information Card -->
 
@@ -193,21 +230,12 @@
         <!-- Project Summary -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
             <h2 class="text-2xl font-bold text-gray-900 mb-4">ملخص المشروع</h2>
-            <p class="text-gray-700 leading-relaxed text-lg" x-text="project.description"></p>
+            <p class="text-gray-700 leading-relaxed text-lg whitespace-pre-wrap break-words" x-text="project.description"></p>
         </div>
 
-        <!-- Keywords -->
-        {{-- <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">الكلمات المفتاحية</h2>
-            <div class="flex flex-wrap gap-2">
-                <template x-for="keyword in project.keywords" :key="keyword">
-                    <span class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium border border-gray-200" x-text="keyword"></span>
-                </template>
-            </div>
-        </div> --}}
 
         <!-- Download Section -->
-        @if ($project->file_path) {{-- @unless (empty($project->file_path)) --}}
+        @if ($project->file_path && $project->is_archiv) {{-- @unless (empty($project->file_path)) --}}
             <div class="bg-gradient-to-br from-blue-50 to-white rounded-lg shadow-sm border border-blue-200 p-8 mb-6">
                 <div class="flex flex-col md:flex-row items-center justify-between">
                     <div class="mb-4 md:mb-0">
@@ -228,25 +256,11 @@
             </div>
         @endif
 
-        @guest('web')  {{-- @auth ("student") --}}
-            <div class="bg-gradient-to-br from-blue-50 to-white rounded-lg shadow-sm border border-blue-200 p-8">
-                <div class="flex flex-col md:flex-row items-center justify-between">
-                    <div class="mb-4 md:mb-0">
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">انضم إلى المشروع</h3>
-                    </div>
-                    <button class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-md hover:shadow-lg">
-                        <svg class="w-4 h-4 ml-1.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                        </svg>
-                        <span>الانضمام</span>
-                    </button>
-                </div>
-            </div>
-        @endguest
+
 
     </div>
 
-<div>
+</div>
 <script>
     function projectDetails() {
         return {

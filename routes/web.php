@@ -35,22 +35,21 @@ use Illuminate\Support\Facades\Route;
 //     return view('home');
 // })->name('home');
 
-Route::get('/h', [ReportController::class, 'generateHomePageReport'])->name('home.reports');
-Route::get('/category', [ReportController::class, 'generateCategoryPageReport'])->name('category.reports');
-
 
 Route::get('/login', LoginApp::class)->name('login');
 
 
+Route::get('/', HomePage::class)->name('home.page');
+Route::get('/categorys', Categorys::class)->name('home.categorys');
+
+
 Route::middleware('auth')->group(function () {
-    Route::get('/', HomePage::class)->name('home.page');
-    Route::get('/categorys', Categorys::class)->name('home.categorys');
 
 
     Route::prefix('projects-live')->name('projects-live.')->group(function () {
-        Route::get('/', ProjectsIndex::class)->name('index');
+        Route::get('/', ProjectsIndex::class)->name('index')->withoutMiddleware('auth');
         Route::get('/create', ProjectsCreate::class)->name('create');
-        Route::get('/{project}', ProjectsShow::class)->name('show');
+        Route::get('/{project}', ProjectsShow::class)->name('show')->withoutMiddleware('auth');
         Route::get('/{project}/edit', ProjectsEdit::class)->name('edit');
     });
 
@@ -75,7 +74,3 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [Logout::class, 'logout'])->name('logout');
 });
 
-
-Route::apiResource('departments', DepartmentController::class);
-Route::apiResource('supervisors', SupervisorController::class);
-Route::apiResource('projects', ProjectController::class);

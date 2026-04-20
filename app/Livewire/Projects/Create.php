@@ -21,13 +21,12 @@ class Create extends Component
     public $summary = '';
 
     // Step 2 fields
-    public $students = [''];
+    public $students = [['name' => '', 'university_number' => '']];
     public $supervisor_id = '';
     public $year = '';
     public $department_id = '';
     public $defenseDate = '';
-    public $grade = '';
-    public $keywords = '';
+
     public $pdfFile;
 
     // Data for selects
@@ -84,14 +83,12 @@ class Create extends Component
         if ($this->currentStep === 2) {
             $rules = array_merge($rules, [
                 'students' => 'required|array|min:1',
-                'students.*' => 'required|string|max:255',
+                'students.*.name' => 'required|string|max:255',
+                'students.*.university_number' => 'required|size:10',
                 'supervisor_id' => 'required|exists:supervisors,id',
                 'year' => 'required|integer|min:2000|max:' . (date('Y') + 1),
                 'department_id' => 'required|exists:departments,id',
                 'defenseDate' => 'required|date',
-                'grade' => 'required|in:A,B+,C+,C,F',
-                'keywords' => 'nullable|string|max:500',
-                'pdfFile' => 'required|file|mimes:pdf|max:10240', // 10MB max
             ]);
         }
 
@@ -103,8 +100,10 @@ class Create extends Component
         'title.max' => 'عنوان المشروع يجب أن لا يتجاوز 150 حرف',
         'summary.required' => 'ملخص المشروع مطلوب',
         'summary.min' => 'ملخص المشروع يجب أن يكون 100 حرف على الأقل',
-        'students.required' => 'يجب إدخال اسم طالب واحد على الأقل',
-        'students.*.required' => 'اسم الطالب مطلوب',
+        'students.required' => 'يجب إدخال بيانات طالب واحد على الأقل',
+        'students.*.name.required' => 'اسم الطالب مطلوب',
+        'students.*.university_number.required' => 'الرقم الجامعي مطلوب',
+        'students.*.university_number.size' => 'الرقم الجامعي يجب أن يكون 10 أرقام',
         'supervisor_id.required' => 'المشرف مطلوب',
         'supervisor_id.exists' => 'المشرف المحدد غير موجود',
         'year.required' => 'السنة الأكاديمية مطلوبة',
@@ -112,11 +111,6 @@ class Create extends Component
         'department_id.exists' => 'التخصص المحدد غير موجود',
         'defenseDate.required' => 'تاريخ المناقشة مطلوب',
         'defenseDate.date' => 'تاريخ المناقشة غير صحيح',
-        'grade.required' => 'التقدير مطلوب',
-        'grade.in' => 'التقدير المحدد غير صحيح',
-        'pdfFile.required' => 'ملف PDF مطلوب',
-        'pdfFile.mimes' => 'يجب أن يكون الملف بصيغة PDF',
-        'pdfFile.max' => 'حجم الملف يجب أن لا يتجاوز 10MB',
     ];
 
     public function mount()
@@ -135,7 +129,7 @@ class Create extends Component
 
     public function addStudent()
     {
-        $this->students[] = '';
+        $this->students[] = ['name' => '', 'university_number' => ''];
     }
 
     public function removeStudent($index)
@@ -197,23 +191,18 @@ class Create extends Component
                 'year' => $this->year,
                 'submission_deadline' => $this->defenseDate,
                 'file_path' => $pdfPath,
-                'grade' => $this->grade,
-                'is_archiv' => true,
+                'grade' => "pending",
+                'is_archiv' => false,
             ]);
 
             // Create students
-            $studentIndex = 0;
-            foreach ($this->students as $studentName) {
-                if (trim($studentName)) {
-                    $studentIndex++;
-                    // Generate a unique university number (you can customize this logic)
-                    $universityNumber = 'STU-' . $this->year . '-' . $project->id . '-' . str_pad($studentIndex, 3, '0', STR_PAD_LEFT);
-
+            foreach ($this->students as $studentData) {
+                if (trim($studentData['name']) && trim($studentData['university_number'])) {
                     Student::create([
-                        'name' => trim($studentName),
+                        'name' => trim($studentData['name']),
                         'project_id' => $project->id,
                         'department_id' => $this->department_id,
-                        'university_number' => $universityNumber,
+                        'university_number' => trim($studentData['university_number']),
                     ]);
                 }
             }

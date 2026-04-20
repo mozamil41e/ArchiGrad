@@ -55,7 +55,7 @@
                 </a>
 
                 <!-- Link 3: حول النظام -->
-                <a wire:navigate href="#about" class="group block p-6 bg-gradient-to-br from-purple-50 to-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-300">
+                <a  href="#about" class="group block p-6 bg-gradient-to-br from-purple-50 to-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-300">
                     <div class="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-lg mb-4 group-hover:bg-purple-600 transition">
                         <svg class="w-6 h-6 text-purple-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -118,7 +118,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <p class="text-gray-400 mb-2">نظام أرشفة مشاريع التخرج © 2025</p>
-                <p class="text-gray-500 text-sm">جميع الحقوق محفوظة</p>
+                <p class="text-gray-500 text-sm">جميع الحقوق محفوظة لجامعة الزعيم الازهري</p>
             </div>
         </div>
     </footer>
