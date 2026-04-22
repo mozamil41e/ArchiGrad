@@ -20,7 +20,6 @@ class Project extends Model
         'submission_deadline', // This is 'defenseDate' in the form
         'is_archiv',
         'file_path',
-        'keywords',
     ];
 
     protected $casts = [
