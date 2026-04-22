@@ -146,10 +146,16 @@
                             <span>إضافة طالب</span>
                         </button>
                     </div>
+                    <!-- Header Row -->
+                    <div class="grid grid-cols-3 gap-2 mb-3 px-4 py-2 bg-gray-50 rounded-lg border border-gray-200">
+                        <span class="text-xs font-semibold text-gray-600">اسم الطالب</span>
+                        <span class="text-xs font-semibold text-gray-600">الرقم الجامعي</span>
+                        <span class="text-xs font-semibold text-gray-600 text-end">الإجراءات</span>
+                    </div>
 
-                    <div class="space-y-4">
+                    <div class="space-y-3">
                         @foreach($students as $index => $student)
-                            <div class="flex items-start gap-4" wire:key="student-{{ $index }}">
+                            <div class="grid grid-cols-3 gap-2 items-start" wire:key="student-{{ $index }}">
                                 <div class="flex-1">
                                     <input
                                         type="text"
@@ -167,7 +173,7 @@
                                          validate(val) {
                                              if (!val) { this.uniError = ''; return; }
                                              if (!/^\d+$/.test(val)) { this.uniError = 'يُسمح بالأرقام فقط'; return; }
-                                             if (val.length < 10) { this.uniError = 'يجب أن يتكوّن من 10 أرقام (مُدخل: ' + val.length + ')'; return; }
+                                             if (val.length < 11) { this.uniError = 'يجب أن يتكوّن من 11 أرقام (مُدخل: ' + val.length + ')'; return; }
                                              this.uniError = '';
                                          }
                                      }">
@@ -176,7 +182,7 @@
                                         wire:model="students.{{ $index }}.university_number"
                                         inputmode="numeric"
                                         maxlength="11"
-                                        :class="uniError ? 'border-red-500 focus:ring-red-400' : ($el.value.length === 11 ? 'border-green-500 focus:ring-green-400' : 'border-gray-300 focus:ring-blue-500')"
+                                        :class="uniError ? 'border-red-500 focus:ring-red-400' : ($el.value && $el.value.length === 11 ? 'border-green-500 focus:ring-green-400' : 'border-gray-300 focus:ring-blue-500')"
                                         class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-colors @error('students.'.$index.'.university_number') border-red-500 @enderror"
                                         placeholder="الرقم الجامعي (11 أرقام)"
                                         @input="
@@ -191,18 +197,20 @@
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
-                                @if(count($students) > 1)
-                                    <button
-                                        type="button"
-                                        wire:click="removeStudent({{ $index }})"
-                                        class="mt-3 p-2.5 text-red-600 hover:bg-red-50 rounded-lg transition"
-                                        title="حذف الطالب"
-                                    >
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                        </svg>
-                                    </button>
-                                @endif
+                                <div class="flex justify-end">
+                                    @if(count($students) > 1)
+                                        <button
+                                            type="button"
+                                            wire:click="removeStudent({{ $index }})"
+                                            class="p-2.5 text-red-600 hover:bg-red-50 rounded-lg transition"
+                                            title="حذف الطالب"
+                                        >
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                        </button>
+                                    @endif
+                                </div>
                             </div>
                         @endforeach
                     </div>

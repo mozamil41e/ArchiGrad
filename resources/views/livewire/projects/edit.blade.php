@@ -132,7 +132,7 @@
                     <div class="grid grid-cols-3 gap-2 mb-3 px-4 py-2 bg-gray-50 rounded-lg border border-gray-200">
                         <span class="text-xs font-semibold text-gray-600">اسم الطالب</span>
                         <span class="text-xs font-semibold text-gray-600">الرقم الجامعي</span>
-                        <span class="text-xs font-semibold text-gray-600">الإجراءات</span>
+                        <span class="text-xs font-semibold text-gray-600 text-end">الإجراءات</span>
                     </div>
 
                     <div class="space-y-3">
@@ -149,13 +149,30 @@
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
-                                <div>
+                                <div class="flex-1"
+                                     x-data="{
+                                         uniError: '',
+                                         validate(val) {
+                                             if (!val) { this.uniError = ''; return; }
+                                             if (!/^\d+$/.test(val)) { this.uniError = 'يُسمح بالأرقام فقط'; return; }
+                                             if (val.length < 11) { this.uniError = 'يجب أن يتكوّن من 11 أرقام (مُدخل: ' + val.length + ')'; return; }
+                                             this.uniError = '';
+                                         }
+                                     }">
                                     <input
                                         type="text"
                                         wire:model="universityNumbers.{{ $index }}"
-                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('universityNumbers.'.$index) border-red-500 @enderror"
-                                        placeholder="الرقم الجامعي"
+                                        inputmode="numeric"
+                                        maxlength="11"
+                                        :class="uniError ? 'border-red-500 focus:ring-red-400' : ($el.value && $el.value.length === 11 ? 'border-green-500 focus:ring-green-400' : 'border-gray-300 focus:ring-blue-500')"
+                                        class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-colors @error('universityNumbers.'.$index) border-red-500 @enderror"
+                                        placeholder="الرقم الجامعي (11 أرقام)"
+                                        @input="
+                                            $el.value = $el.value.replace(/\D/g, '').slice(0, 11);
+                                            validate($el.value);
+                                        "
                                     >
+                                    <p x-show="uniError" x-text="uniError" class="mt-1 text-sm text-red-600" style="display:none;"></p>
                                     @error('universityNumbers.'.$index)
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror

@@ -1,4 +1,25 @@
 <div class="min-h-screen flex flex-col" dir="rtl">
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            @page { size: A4; margin: 15mm; }
+            body { background: white !important; color: black !important; padding: 0; margin: 0; }
+            .max-w-7xl { max-width: 100% !important; padding: 0 !important; }
+            .bg-white { border: 1px solid #eee !important; box-shadow: none !important; }
+            .shadow-sm, .shadow-md, .shadow-lg { box-shadow: none !important; }
+            .rounded-xl { border-radius: 4px !important; }
+            .grid { gap: 1rem !important; }
+            /* Force black text for better contrast */
+            .text-gray-900, .text-gray-700, .text-gray-600 { color: black !important; }
+            /* Keep badge colors but subtle */
+            .bg-blue-100, .bg-green-100, .bg-teal-100, .bg-yellow-100, .bg-orange-100, .bg-red-100 {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+        .print-only { display: none; }
+    </style>
     <!-- Page Header with Filters -->
     <div class="bg-white border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -8,10 +29,48 @@
                     <h2 class="text-2xl font-bold text-gray-900 mb-1">التقارير والإحصائيات</h2>
                     <p class="text-sm text-gray-600">نظرة عامة على أداء الأقسام والمشاريع</p>
                 </div>
+                <div class="flex items-center gap-2 no-print">
+                    <button
+                        onclick="window.print()"
+                        class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
+                    >
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2-2v4h10z"></path>
+                        </svg>
+                        طباعة التقرير
+                    </button>
+                </div>
+            </div>
+
+            <!-- Print-Only Header -->
+            <div class="print-only border-b-2 border-gray-900 pb-4 mb-8">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h1 class="text-3xl font-black text-gray-900">تقرير المشاريع والإحصائيات</h1>
+                        <p class="text-sm text-gray-600 mt-1">تاريخ الطباعة: {{ now()->format('Y-m-d H:i') }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs font-bold uppercase text-gray-500">نظام إدارة مشاريع التخرج</p>
+                    </div>
+                </div>
+                <div class="mt-4 flex flex-wrap gap-x-8 gap-y-2 text-sm">
+                    <div>
+                        <span class="font-bold">السنة:</span>
+                        <span>{{ $year ?: 'جميع السنوات' }}</span>
+                    </div>
+                    <div>
+                        <span class="font-bold">الحالة:</span>
+                        <span>{{ $is_archiv === '0' ? 'نشطة' : ($is_archiv === '1' ? 'مؤرشفة' : 'الكل') }}</span>
+                    </div>
+                    <div>
+                        <span class="font-bold">القسم:</span>
+                        <span>{{ $department_id ? \App\Models\Department::find($department_id)?->name : 'جميع الأقسام' }}</span>
+                    </div>
+                </div>
             </div>
 
             <!-- Filters Section -->
-            <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+            <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 no-print">
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-end">
                     <!-- Year Filter -->
                     <div wire:key="filter-year">
@@ -37,6 +96,20 @@
                             <option value="">جميع المشاريع</option>
                             <option value="0">المشاريع النشطة</option>
                             <option value="1">المشاريع المؤرشفة</option>
+                        </select>
+                    </div>
+
+                    <!-- Department Filter -->
+                    <div wire:key="filter-department">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">القسم</label>
+                        <select
+                            wire:model.live="department_id"
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
+                        >
+                            <option value="">جميع الأقسام</option>
+                            @foreach($departments as $department)
+                                <option value="{{ $department->id }}">{{ $department->name }}</option>
+                            @endforeach
                         </select>
                     </div>
 

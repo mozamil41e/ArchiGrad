@@ -17,6 +17,9 @@ class Index extends Component
     #[Url(history: true)]
     public $is_archiv = ''; // Consistent with status filter logic
 
+    #[Url(history: true)]
+    public $department_id = '';
+
     /**
      * Numeric weight threshold — departments averaging below this are "weak".
      * Scale: A=95, B+=85, B=75, C+=65, C=55, F=25
@@ -38,15 +41,16 @@ class Index extends Component
 
     public function updated($property)
     {
-        if (in_array($property, ['year', 'is_archiv'])) {
+        if (in_array($property, ['year', 'is_archiv', 'department_id'])) {
             // Cache key is based on filters, so Cache::remember handles invalidation automatically.
         }
     }
 
     public function resetFilters()
     {
-        $this->year     = '';
-        $this->is_archiv = '';
+        $this->year          = '';
+        $this->is_archiv     = '';
+        $this->department_id = '';
     }
 
     /**
@@ -91,14 +95,17 @@ class Index extends Component
     public function analyticsData()
     {
         $cacheKey = 'reports_analytics_' . md5(serialize([
-            'year'      => $this->year,
-            'is_archiv' => $this->is_archiv,
-            'threshold' => $this->threshold,
+            'year'          => $this->year,
+            'is_archiv'     => $this->is_archiv,
+            'department_id' => $this->department_id,
+            'threshold'     => $this->threshold,
         ]));
 
         return Cache::remember($cacheKey, 100, function () {
             // Eager-load departments with their project grades (string values), filtered
-            $departments = Department::withCount(['projects' => function ($q) {
+            $departments = Department::query()
+            ->when($this->department_id, fn($q) => $q->where('id', $this->department_id))
+            ->withCount(['projects' => function ($q) {
                 $q->when($this->year, fn($q) => $q->where('year', $this->year))
                   ->when($this->is_archiv !== '', fn($q) => $q->where('is_archiv', $this->is_archiv));
             }])
@@ -162,8 +169,9 @@ class Index extends Component
         $years = range($currentYear, $currentYear - 19);
 
         return view('livewire.reports.index', [
-            'data'  => $this->analyticsData(),
-            'years' => $years,
+            'data'        => $this->analyticsData(),
+            'years'       => $years,
+            'departments' => Department::orderBy('name')->get(),
         ]);
     }
 }

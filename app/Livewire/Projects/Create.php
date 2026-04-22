@@ -90,7 +90,7 @@ class Create extends Component
             $rules = array_merge($rules, [
                 'students' => 'nullable|array|min:1',
                 'students.*.name' => 'nullable|string|max:255',
-                'students.*.university_number' => 'nullable|size:11',
+                'students.*.university_number' => 'nullable|size:11|distinct|unique:students,university_number',
                 'supervisor_id' => 'required|exists:supervisors,id',
                 'year' => 'required|integer|min:2000|max:' . (date('Y') + 1),
                 'department_id' => 'required|exists:departments,id',
@@ -109,6 +109,8 @@ class Create extends Component
         'students.required' => 'يجب إدخال بيانات طالب واحد على الأقل',
         'students.*.name.required' => 'اسم الطالب مطلوب',
         'students.*.university_number.required' => 'الرقم الجامعي مطلوب',
+        'students.*.university_number.unique' => 'الرقم الجامعي موجود بالفعل',
+        'students.*.university_number.distinct' => 'الرقم الجامعي مكرر في النموذج',
         'students.*.university_number.size' => 'الرقم الجامعي يجب أن يكون 11 أرقام',
         'supervisor_id.required' => 'المشرف مطلوب',
         'supervisor_id.exists' => 'المشرف المحدد غير موجود',

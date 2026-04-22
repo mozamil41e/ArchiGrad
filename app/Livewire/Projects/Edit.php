@@ -122,15 +122,42 @@ class Edit extends Component
             'students' => 'nullable|array|min:1',
             'students.*' => 'nullable|string|min:2',
             'universityNumbers' => 'nullable|array|min:1',
-            'universityNumbers.*' => 'nullable|string|min:11',
+            'universityNumbers.*' => [
+                'nullable',
+                'string',
+                'min:11',
+                'distinct',
+                Rule::unique('students', 'university_number')->whereNot('project_id', $this->projectId),
+            ],
             'supervisor_id' => 'required|exists:supervisors,id',
-            'year' => 'required|string',
+            'year' => 'required|integer|min:2000|max:' . (date('Y') + 1),
             'department_id' => 'required|exists:departments,id',
             'defenseDate' => 'required|date',
             'grade' => 'required|in:A,B+,B,C+,C,F,pending',
             // 'keywords' => 'required|string',
             'pdfFile' => $this->projectId ? 'nullable|mimes:pdf|max:10240' : 'required|mimes:pdf|max:10240',
-        ]);
+        ],[
+        'title.required' => 'عنوان المشروع مطلوب',
+        'title.max' => 'عنوان المشروع يجب أن لا يتجاوز 150 حرف',
+        'summary.required' => 'ملخص المشروع مطلوب',
+        'summary.min' => 'ملخص المشروع يجب أن يكون 100 حرف على الأقل',
+        'students.required' => 'يجب إدخال بيانات طالب واحد على الأقل',
+        'students.*.required' => 'اسم الطالب مطلوب',
+        'students.*.min' => 'اسم الطالب يجب أن يكون حرفين على الأقل',
+        'universityNumbers.required' => 'الرقم الجامعي مطلوب',
+        'universityNumbers.*.required' => 'الرقم الجامعي مطلوب',
+        'universityNumbers.*.unique' => 'الرقم الجامعي موجود بالفعل',
+        'universityNumbers.*.min' => 'الرقم الجامعي يجب أن يكون 11 أرقام على الأقل',
+        'universityNumbers.*.distinct' => 'الرقم الجامعي مكرر في النموذج',
+        'supervisor_id.required' => 'المشرف مطلوب',
+        'supervisor_id.exists' => 'المشرف المحدد غير موجود',
+        'year.required' => 'السنة الأكاديمية مطلوبة',
+        'department_id.required' => 'التخصص مطلوب',
+        'department_id.exists' => 'التخصص المحدد غير موجود',
+        'defenseDate.required' => 'تاريخ المناقشة مطلوب',
+        'defenseDate.date' => 'تاريخ المناقشة غير صحيح',
+    ],);
+
 
         try {
             $projectData = [
