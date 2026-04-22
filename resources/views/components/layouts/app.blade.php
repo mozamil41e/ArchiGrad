@@ -67,6 +67,10 @@
                                 إدارة المشرفين
                             </x-nav-link>
 
+                            <x-nav-link href="{{ route('reports-live.index') }}" active="reports-live.*">
+                                التقارير والإحصائيات
+                            </x-nav-link>
+
                             <!-- ضع هذا في آخر الـ nav-links -->
                             <div class="flex items-center space-x-reverse space-x-4 border-r border-gray-200 pr-6">
                                 <span class="text-sm text-gray-600">{{ auth()->user()->name }}</span>
@@ -123,6 +127,10 @@
 
                             <x-nav-link href="{{ route('supervisors-live.index') }}" active="supervisors-live.index">
                                 إدارة المشرفين
+                            </x-nav-link>
+
+                            <x-nav-link href="{{ route('reports-live.index') }}" active="reports-live.*">
+                                التقارير والإحصائيات
                             </x-nav-link>
                         @endauth
                     </div>

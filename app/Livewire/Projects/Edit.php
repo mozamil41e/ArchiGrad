@@ -53,7 +53,6 @@ class Edit extends Component
         // Generate years (current year and previous 5 years)
         $currentYear = Carbon::now()->year;
         $this->years = collect(range($currentYear, $currentYear - 5))
-            ->map(fn($year) => $year . '-' . ($year + 1))
             ->toArray();
 
         // Initialize students array
@@ -120,15 +119,15 @@ class Edit extends Component
         $this->validate([
             'title' => 'required|string|max:150',
             'summary' => 'required|string|min:100',
-            'students' => 'required|array|min:1',
-            'students.*' => 'required|string|min:2',
-            'universityNumbers' => 'required|array|min:1',
-            'universityNumbers.*' => 'required|string|min:3',
+            'students' => 'nullable|array|min:1',
+            'students.*' => 'nullable|string|min:2',
+            'universityNumbers' => 'nullable|array|min:1',
+            'universityNumbers.*' => 'nullable|string|min:11',
             'supervisor_id' => 'required|exists:supervisors,id',
             'year' => 'required|string',
             'department_id' => 'required|exists:departments,id',
             'defenseDate' => 'required|date',
-            'grade' => 'required|in:A,B+,C+,C,F,pending',
+            'grade' => 'required|in:A,B+,B,C+,C,F,pending',
             // 'keywords' => 'required|string',
             'pdfFile' => $this->projectId ? 'nullable|mimes:pdf|max:10240' : 'required|mimes:pdf|max:10240',
         ]);

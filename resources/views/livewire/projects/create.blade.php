@@ -74,13 +74,36 @@
                     <input
                         type="text"
                         id="title"
-                        wire:model="title"
+                        wire:model.blur="title"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('title') border-red-500 @enderror"
                         placeholder="أدخل عنوان المشروع"
                     >
                     @error('title')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
+
+                    {{-- Similarity Warning --}}
+                    @if(isset($similarProjects['pass']) && !$similarProjects['pass'])
+                        <div class="mt-4 p-4 bg-yellow-50 border-r-4 border-yellow-400 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <svg class="w-5 h-5 text-yellow-500 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                </svg>
+                                <h4 class="text-sm font-bold text-yellow-800">تنبيه: تم العثور على مشاريع مشابهة</h4>
+                            </div>
+                            <ul class="space-y-1">
+                                @foreach($similarProjects as $key => $project)
+                                    @if($key !== 'pass')
+                                        <li class="text-xs text-yellow-700 flex justify-between items-center">
+                                            <span>{{ $project['existing_title'] }}</span>
+                                            <span class="font-bold mr-2">{{ $project['similarity'] }}%</span>
+                                        </li>
+                                    @endif
+                                @endforeach
+                            </ul>
+                            <p class="mt-2 text-xs text-yellow-600 italic">يرجى التأكد من أن مشروعك يقدم فكرة جديدة أو تطوير ملموس للمشاريع السابقة.</p>
+                        </div>
+                    @endif
                 </div>
 
                 <!-- Project Summary -->
@@ -138,13 +161,32 @@
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
-                                <div class="flex-1">
+                                <div class="flex-1"
+                                     x-data="{
+                                         uniError: '',
+                                         validate(val) {
+                                             if (!val) { this.uniError = ''; return; }
+                                             if (!/^\d+$/.test(val)) { this.uniError = 'يُسمح بالأرقام فقط'; return; }
+                                             if (val.length < 10) { this.uniError = 'يجب أن يتكوّن من 10 أرقام (مُدخل: ' + val.length + ')'; return; }
+                                             this.uniError = '';
+                                         }
+                                     }">
                                     <input
                                         type="text"
                                         wire:model="students.{{ $index }}.university_number"
-                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('students.'.$index.'.university_number') border-red-500 @enderror"
-                                        placeholder="الرقم الجامعي"
+                                        inputmode="numeric"
+                                        maxlength="11"
+                                        :class="uniError ? 'border-red-500 focus:ring-red-400' : ($el.value.length === 11 ? 'border-green-500 focus:ring-green-400' : 'border-gray-300 focus:ring-blue-500')"
+                                        class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-colors @error('students.'.$index.'.university_number') border-red-500 @enderror"
+                                        placeholder="الرقم الجامعي (11 أرقام)"
+                                        @input="
+                                            $el.value = $el.value.replace(/\D/g, '').slice(0, 11);
+                                            validate($el.value);
+                                        "
                                     >
+                                    {{-- Alpine real-time error --}}
+                                    <p x-show="uniError" x-text="uniError" class="mt-1 text-sm text-red-600" style="display:none;"></p>
+                                    {{-- Livewire server-side error --}}
                                     @error('students.'.$index.'.university_number')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror

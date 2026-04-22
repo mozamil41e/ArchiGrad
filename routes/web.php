@@ -70,6 +70,11 @@ Route::middleware('auth')->group(function () {
     });
 
 
+    Route::prefix('reports-live')->name('reports-live.')->group(function () {
+        Route::get('/', \App\Livewire\Reports\Index::class)->name('index');
+    });
+
+
 
     Route::post('/logout', [Logout::class, 'logout'])->name('logout');
 });

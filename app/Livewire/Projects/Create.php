@@ -35,13 +35,19 @@ class Create extends Component
     public $years = [];
 
 
-    public array $existingProjects = [
-        "نظام إدارة مشاريع التخرج",
-        "تطبيق مكتبي لإدارة الطلاب",
-        "نظام متابعة مشاريع بصات"
-    ];
+    public array $existingProjects = [];
+    public array $similarProjects = [];
 
     public string $newTitle = "نظام متابعة مشاريع بصات";
+
+    public function updatedTitle($value)
+    {
+        if (strlen($value) > 5) {
+            $this->similarProjects = $this->checkProjectSimilarity($value, $this->existingProjects);
+        } else {
+            $this->similarProjects = [];
+        }
+    }
 
     /**
      * تحقق من تشابه عنوان المشروع مع المشاريع السابقة
@@ -82,9 +88,9 @@ class Create extends Component
 
         if ($this->currentStep === 2) {
             $rules = array_merge($rules, [
-                'students' => 'required|array|min:1',
-                'students.*.name' => 'required|string|max:255',
-                'students.*.university_number' => 'required|size:10',
+                'students' => 'nullable|array|min:1',
+                'students.*.name' => 'nullable|string|max:255',
+                'students.*.university_number' => 'nullable|size:11',
                 'supervisor_id' => 'required|exists:supervisors,id',
                 'year' => 'required|integer|min:2000|max:' . (date('Y') + 1),
                 'department_id' => 'required|exists:departments,id',
@@ -103,7 +109,7 @@ class Create extends Component
         'students.required' => 'يجب إدخال بيانات طالب واحد على الأقل',
         'students.*.name.required' => 'اسم الطالب مطلوب',
         'students.*.university_number.required' => 'الرقم الجامعي مطلوب',
-        'students.*.university_number.size' => 'الرقم الجامعي يجب أن يكون 10 أرقام',
+        'students.*.university_number.size' => 'الرقم الجامعي يجب أن يكون 11 أرقام',
         'supervisor_id.required' => 'المشرف مطلوب',
         'supervisor_id.exists' => 'المشرف المحدد غير موجود',
         'year.required' => 'السنة الأكاديمية مطلوبة',
