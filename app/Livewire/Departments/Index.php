@@ -117,6 +117,12 @@ class Index extends Component
             ->withCount([
                 'supervisors',
                 'projects',
+                'projects as archived_projects_count' => function($query) {
+                    $query->where('is_archiv', true);
+                },
+                'projects as notarchived_projects_count' => function($query) {
+                    $query->where('is_archiv', false);
+                },
                 'students',
             ])
             ->orderBy('name')

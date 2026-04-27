@@ -58,6 +58,8 @@
                             <th class="px-6 py-4 text-sm font-bold text-gray-700">اسم القسم</th>
                             <th class="px-6 py-4 text-sm font-bold text-gray-700">عدد المشرفين</th>
                             <th class="px-6 py-4 text-sm font-bold text-gray-700">إجمالي المشاريع</th>
+                            <th class="px-6 py-4 text-sm font-bold text-gray-700">المشاريع المؤرشفة</th>
+                            <th class="px-6 py-4 text-sm font-bold text-gray-700">المشاريع الغير مؤرشفة</th>
                             <th class="px-6 py-4 text-sm font-bold text-gray-700">عدد الطلاب</th>
                             <th class="px-6 py-4 text-sm font-bold text-gray-700">الإجراءات</th>
                         </tr>
@@ -70,6 +72,8 @@
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ $dept->supervisors_count }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ $dept->projects_count }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">{{ $dept->archived_projects_count }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">{{ $dept->notarchived_projects_count }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ $dept->students_count }}</td>
                                 <td class="px-6 py-4">
                                     <div class="flex space-x-reverse space-x-2">
