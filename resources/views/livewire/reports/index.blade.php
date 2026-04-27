@@ -26,8 +26,8 @@
             <!-- Header Section (Title) -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
                 <div class="flex-shrink-0">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-1">التقارير والإحصائيات</h2>
-                    <p class="text-sm text-gray-600">نظرة عامة على أداء الأقسام والمشاريع</p>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-1">تقارير المشاريع المؤرشفة</h2>
+                    <p class="text-sm text-gray-600">نظرة عامة على أداء الأقسام والمشاريع التي تم أرشفتها</p>
                 </div>
                 <div class="flex items-center gap-2 no-print">
                     <button
@@ -46,7 +46,7 @@
             <div class="print-only border-b-2 border-gray-900 pb-4 mb-8">
                 <div class="flex justify-between items-start">
                     <div>
-                        <h1 class="text-3xl font-black text-gray-900">تقرير المشاريع والإحصائيات</h1>
+                        <h1 class="text-3xl font-black text-gray-900">تقرير المشاريع المؤرشفة والإحصائيات</h1>
                         <p class="text-sm text-gray-600 mt-1">تاريخ الطباعة: {{ now()->format('Y-m-d H:i') }}</p>
                     </div>
                     <div class="text-right">
@@ -58,10 +58,7 @@
                         <span class="font-bold">السنة:</span>
                         <span>{{ $year ?: 'جميع السنوات' }}</span>
                     </div>
-                    <div>
-                        <span class="font-bold">الحالة:</span>
-                        <span>{{ $is_archiv === '0' ? 'نشطة' : ($is_archiv === '1' ? 'مؤرشفة' : 'الكل') }}</span>
-                    </div>
+
                     <div>
                         <span class="font-bold">القسم:</span>
                         <span>{{ $department_id ? \App\Models\Department::find($department_id)?->name : 'جميع الأقسام' }}</span>
@@ -86,18 +83,7 @@
                         </select>
                     </div>
 
-                    <!-- Status Filter -->
-                    <div wire:key="filter-status">
-                        <label class="block text-xs font-medium text-gray-700 mb-1">حالة المشروع</label>
-                        <select
-                            wire:model.live="is_archiv"
-                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
-                        >
-                            <option value="">جميع المشاريع</option>
-                            <option value="0">المشاريع النشطة</option>
-                            <option value="1">المشاريع المؤرشفة</option>
-                        </select>
-                    </div>
+
 
                     <!-- Department Filter -->
                     <div wire:key="filter-department">
@@ -139,7 +125,7 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-medium text-gray-500">إجمالي المشاريع</p>
+                        <p class="text-sm font-medium text-gray-500">إجمالي المشاريع المؤرشفة</p>
                         <h3 class="text-2xl font-bold text-gray-900 mt-1">{{ $data['stats']['total_projects'] }}</h3>
                     </div>
                     <div class="bg-blue-50 p-3 rounded-lg">
@@ -286,7 +272,7 @@
         <!-- C. Projects Count per Department -->
         <div class="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100">
-                <h3 class="text-lg font-bold text-gray-900">توزيع المشاريع حسب القسم</h3>
+                <h3 class="text-lg font-bold text-gray-900">توزيع المشاريع المؤرشفة حسب القسم</h3>
             </div>
             <div class="p-6">
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

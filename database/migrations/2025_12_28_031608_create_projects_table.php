@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('supervisor_id')->constrained('supervisors')->onDelete('cascade');
             $table->string('title', 150);
             $table->text('description');
-            $table->enum('grade', ['A', 'B+', 'C+', 'C', 'F', 'pending'])->default('pending');
+            $table->enum('grade', ['A', 'B+', 'B', 'C+', 'C', 'F', 'pending'])->default('pending');
             $table->boolean('is_archiv')->default(false);
             $table->year('year')->nullable();
             $table->date('submission_deadline')->nullable();
