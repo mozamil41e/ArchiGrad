@@ -3,7 +3,7 @@
      <div class="max-w-4xl w-full text-center">
         <!-- Error Illustration/Icon -->
         <div class="mb-12 relative inline-block">
-            <div class="text-[120px] md:text-[180px] font-black text-blue-600 opacity-10 leading-none select-none">404</div>
+            <div class="text-[120px] md:text-[180px] font-black text-blue-600 opacity-10 leading-none select-none">403</div>
             <div class="absolute inset-0 flex items-center justify-center">
                 <div class="bg-white p-8 rounded-2xl shadow-xl border border-blue-50">
                      <svg class="w-24 h-24 text-blue-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -15,10 +15,10 @@
 
         <!-- Error Message -->
         <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 transition-all hover:scale-105 duration-300">
-            عذراً، لم نتمكن من العثور على هذه الصفحة!
+            عذراً، ليس لديك صلاحية الوصول لهذه الصفحة!
         </h1>
         <p class="text-lg text-gray-600 mb-10 max-w-lg mx-auto leading-relaxed">
-            يبدو أن الرابط الذي تحاول الوصول إليه غير موجود، أو ربما تم نقله إلى مكان آخر. لا تقلق، يمكنك العودة والبدء من جديد.
+             عذراً، يبدو أن ليس لديك صلاحية الوصول لهذه الصفحة. لا تقلق، يمكنك العودة والبدء من جديد.
         </p>
 
         <!-- CTAs -->

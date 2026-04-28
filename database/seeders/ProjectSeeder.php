@@ -268,6 +268,19 @@ class ProjectSeeder extends Seeder
     ]
     ];
 
+    for ($i=0; $i < 3000 ; $i++) {
+        $project= [];
+        $project['department_id'] = Arr::random([1, 2, 3]);
+        $project['supervisor_id'] = Arr::random([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]);
+        $project['title'] = "مشروع " . $i;
+        $project['description'] = "وصف المشروع " . $i;
+        $project['is_archiv'] = Arr::random([true, false]);
+        $project['year'] = Arr::random([2015, 2016,2017,2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]);
+        $project['submission_deadline'] = date('Y-m-d', strtotime("+$i days"));
+        $project['file_path'] = null;
+
+        array_push($projects, $project);
+    }
 
      $projectsWithGrades = array_map(function ($project) {
          $project['grade'] = Arr::random(['A', 'B+', 'B', 'C+', 'C', 'F']);

@@ -4,7 +4,7 @@
             <nav class="flex" aria-label="Breadcrumb">
                 <ol class="flex items-center space-x-reverse space-x-2">
                     <li>
-                        <a wire:navigate href="{{ route('home.reports') }}" class="text-gray-500 hover:text-blue-600 transition">الرئيسية</a>
+                        <a wire:navigate href="{{ route('home.page') }}" class="text-gray-500 hover:text-blue-600 transition">الرئيسية</a>
                     </li>
                     <li>
                         <span class="text-gray-400 mx-2">/</span>

@@ -224,7 +224,7 @@
         </div>
     @endif
 
-
+ <x-footer />
 
 </div>
 

@@ -73,7 +73,7 @@
 
                             <!-- ضع هذا في آخر الـ nav-links -->
                             <div class="flex items-center space-x-reverse space-x-4 border-r border-gray-200 pr-6">
-                                <span class="text-sm text-gray-600">{{ auth()->user()->name }}</span>
+                                <span class="text-base font-bold text-gray-900">{{ auth()->user()->name }}</span>
                                 <livewire:auth.logout />
                             </div>
 

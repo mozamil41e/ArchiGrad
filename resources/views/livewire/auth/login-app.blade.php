@@ -84,14 +84,9 @@
             </span>
           </button>
         </div>
-
-        {{-- <div class="text-center text-sm">
-          <span class="text-gray-600">ليس لديك حساب؟</span>
-          <a href="/register" class="font-bold text-blue-600 hover:text-blue-500 mr-1">
-            سجل الآن
-          </a>
-        </div> --}}
       </form>
     </div>
   </main>
+  <!-- Footer -->
+  <x-footer />
 </div>

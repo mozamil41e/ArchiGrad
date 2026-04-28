@@ -300,4 +300,6 @@
         </div>
 
     </div>
+
+    <x-footer />
 </div>

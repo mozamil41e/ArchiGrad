@@ -29,16 +29,16 @@
     <nav class="bg-white shadow-sm border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-            <a wire:navigate href="{{ route('home.reports') }}">
+            <a wire:navigate href="{{ route('home.page') }}">
                 <div class="flex items-center space-x-reverse space-x-8">
                         <h1 class="text-xl font-bold text-blue-600">نظام أرشفة المشاريع</h1>
                 </div>
             </a>
                 <div class="flex items-center space-x-reverse space-x-6 text-sm">
                     <a wire:navigate href="/" class="text-blue-600 font-semibold hover:text-blue-700 transition">livewire view</a>
-                    <a wire:navigate href="{{ route('home.reports') }}" class="text-blue-600 font-semibold hover:text-blue-700 transition">الرئيسية</a>
-                    <a wire:navigate href="{{ route('projects.index') }}" class="text-gray-600 hover:text-blue-600 transition">البحث</a>
-                    <a wire:navigate href="{{ route('category.reports') }}" class="text-gray-600 hover:text-blue-600 transition">التصنيفات</a>
+                    <a wire:navigate href="{{ route('home.page') }}" class="text-blue-600 font-semibold hover:text-blue-700 transition">الرئيسية</a>
+                    <a wire:navigate href="{{ route('projects-live.index') }}" class="text-gray-600 hover:text-blue-600 transition">البحث</a>
+                    <a wire:navigate href="{{ route('home.categorys') }}" class="text-gray-600 hover:text-blue-600 transition">التصنيفات</a>
                     <a wire:navigate href="admin-archive.html" class="text-gray-600 hover:text-blue-600 transition">أرشفة مشروع</a>
                     <a wire:navigate href="admin-users.html" class="text-gray-600 hover:text-blue-600 transition">إدارة المستخدمين</a>
                     <a wire:navigate href="admin-supervisors.html" class="text-gray-600 hover:text-blue-600 transition">إدارة المشرفين</a>
