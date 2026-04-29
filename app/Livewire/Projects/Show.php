@@ -51,6 +51,9 @@ class Show extends Component
     public function render()
     {
         $project = $this->project;
+        if($project->grade == "pending") {
+            $project->grade = "لم يتم التقييم بعد";
+        }
         return view('livewire.projects.show', compact('project'));
     }
 }

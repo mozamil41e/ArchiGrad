@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Student;
 
 class StudentSeeder extends Seeder
 {
@@ -62,7 +63,7 @@ class StudentSeeder extends Seeder
 
         $counter = 1;
 
-        for ($projectId = 1; $projectId <= 25; $projectId++) {
+        for ($projectId = 1; $projectId <= 1000; $projectId++){
 
             // $project = \App\Models\Project::find($projectId);
 
@@ -82,6 +83,7 @@ class StudentSeeder extends Seeder
             }
         }
 
-        \App\Models\Student::insert($students);
+        Student::insert($students);
     }
 }
+

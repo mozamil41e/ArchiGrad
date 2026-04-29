@@ -62,7 +62,7 @@
                             </svg>
                             تعديل
                         </a>
-
+                    @if($project->grade != "لم يتم التقييم بعد")
                         @if($project->is_archiv)
                             <button type="button" @click="
                                 Swal.fire({
@@ -108,6 +108,7 @@
                                 أرشفة
                             </button>
                         @endif
+                    @endif
                     </div>
                 </div>
                 <div class="flex flex-wrap gap-2">

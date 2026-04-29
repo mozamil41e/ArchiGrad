@@ -33,7 +33,7 @@ class HomePage extends Component
     }
     public function countNewProjects()
     {
-        return Project::where('is_archiv', false)->count();
+        return Project::where('is_archiv', false)->where('year', date('Y'))->count();
     }
 
     public function countDepartments()

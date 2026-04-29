@@ -8,7 +8,23 @@
     </div>
 
     <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" x-data="categoriesApp()" x-init="init()">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" 
+        x-data="{ 
+            activeTab: 'department',
+            departmentCategories: @js($department_Categories),
+            yearCategories: @js($year_Categories),
+            colors: [
+                { bg: '#DBEAFE', text: '#2563EB' },
+                { bg: '#D1FAE5', text: '#059669' },
+                { bg: '#E9D5FF', text: '#7C3AED' },
+                { bg: '#FFF7ED', text: '#DD6B20' },
+                { bg: '#FEE2E2', text: '#DC2626' },
+                { bg: '#E0E7FF', text: '#4F46E5' },
+                { bg: '#CCFBF1', text: '#0D9488' },
+                { bg: '#FCE7F3', text: '#DB2777' },
+                { bg: '#FEF9C3', text: '#D97706' }
+            ]
+        }">
 
         <!-- Tabs -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
@@ -115,75 +131,5 @@
     <!-- Footer -->
     <x-footer />
 
-    <script>
-        function categoriesApp() {
-            return {
-                activeTab: 'department',
-                    colors: [
-                        { bg: '#DBEAFE', text: '#2563EB' },
-                        { bg: '#D1FAE5', text: '#059669' },
-                        { bg: '#E9D5FF', text: '#7C3AED' },
-                        { bg: '#FFF7ED', text: '#DD6B20' },
-                        { bg: '#FEE2E2', text: '#DC2626' },
-                        { bg: '#E0E7FF', text: '#4F46E5' },
-                        { bg: '#CCFBF1', text: '#0D9488' },
-                        { bg: '#FCE7F3', text: '#DB2777' },
-                        { bg: '#FEF9C3', text: '#D97706' }
-                    ],
-                    color: null,
 
-                init() {
-                    this.color = this.colors[Math.floor(Math.random() * this.colors.length)];
-                },
-                // departmentCategories: [
-                //     {
-                //         name: 'علوم الحاسوب',
-                //         count: 342,
-                //         color: 'bg-blue-100',
-                //         iconColor: 'text-blue-600',
-                //         textColor: 'text-blue-600'
-                //     },
-                //     {
-                //         name: 'هندسة البرمجيات',
-                //         count: 289,
-                //         color: 'bg-green-100',
-                //         iconColor: 'text-green-600',
-                //         textColor: 'text-green-600'
-                //     },
-                //     {
-                //         name: 'نظم المعلومات',
-                //         count: 215,
-                //         color: 'bg-purple-100',
-                //         iconColor: 'text-purple-600',
-                //         textColor: 'text-purple-600'
-                //     },
-                //     {
-                //         name: 'الذكاء الاصطناعي',
-                //         count: 178,
-                //         color: 'bg-orange-100',
-                //         iconColor: 'text-orange-600',
-                //         textColor: 'text-orange-600'
-                //     },
-                //     {
-                //         name: 'الهندسة الكهربائية',
-                //         count: 143,
-                //         color: 'bg-red-100',
-                //         iconColor: 'text-red-600',
-                //         textColor: 'text-red-600'
-                //     },
-                //     {
-                //         name: 'هندسة الاتصالات',
-                //         count: 80,
-                //         color: 'bg-indigo-100',
-                //         iconColor: 'text-indigo-600',
-                //         textColor: 'text-indigo-600'
-                //     }
-                // ],
-
-                departmentCategories: @json($department_Categories),
-
-                yearCategories: @json($year_Categories)
-            }
-        }
-    </script>
 </div>
