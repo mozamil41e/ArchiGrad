@@ -3,6 +3,7 @@
 namespace App\Livewire\Projects;
 
 use App\Models\Project;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -44,8 +45,21 @@ class Show extends Component
         $this->project->is_archiv = false;
         $this->project->save();
 
-        session()->flash('message', 'تم إلغاء أرشفة المشروع بنجاح');
-        $this->dispatch('project-unarchived');
+       return session()->flash('message', 'تم إلغاء أرشفة المشروع بنجاح');
+    }
+
+// download pdf function
+
+    public function downloadPdf()
+    {
+        if ($this->project->file_path && Storage::disk('public')->exists($this->project->file_path)) {
+            return Storage::disk('public')->download(
+                $this->project->file_path,
+                $this->project->title . '.pdf'
+            );
+        }
+
+        session()->flash('error', 'عذراً، الملف غير موجود حالياً.');
     }
 
     public function render()
