@@ -56,12 +56,14 @@
                 <div class="flex items-start justify-between gap-4 mb-4">
                     <h1 class="text-3xl md:text-4xl font-bold text-gray-900 flex-1" x-text="project.title"></h1>
                     <div class="flex items-center gap-2">
+                         @if(!$project->is_archiv)
                         <a wire:navigate href="{{ route('projects-live.edit', $project->id) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-sm hover:shadow-md whitespace-nowrap">
                             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                             </svg>
                             تعديل
                         </a>
+                        @endif
                     @if($project->grade != "لم يتم التقييم بعد")
                         @if($project->is_archiv)
                             <button type="button" @click="
@@ -243,8 +245,10 @@
                         <h3 class="text-xl font-bold text-gray-900 mb-2">تحميل ملف المشروع</h3>
                         <p class="text-gray-600">قم بتحميل الملف الكامل للمشروع بصيغة PDF</p>
                     </div>
+
                     <button wire:click="downloadPdf" wire:loading.attr="disabled" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-md hover:shadow-lg disabled:opacity-50">
                         <svg wire:loading.remove wire:target="downloadPdf" class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
                         <svg wire:loading wire:target="downloadPdf" class="animate-spin h-5 w-5 ml-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
