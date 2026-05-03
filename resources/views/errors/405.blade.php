@@ -3,7 +3,7 @@
      <div class="max-w-4xl w-full text-center">
         <!-- Error Illustration/Icon -->
         <div class="mb-12 relative inline-block">
-            <div class="text-[120px] md:text-[180px] font-black text-blue-600 opacity-10 leading-none select-none">500</div>
+            <div class="text-[120px] md:text-[180px] font-black text-blue-600 opacity-10 leading-none select-none">405</div>
             <div class="absolute inset-0 flex items-center justify-center">
                 <div class="bg-white p-8 rounded-2xl shadow-xl border border-blue-50">
                      <svg class="w-24 h-24 text-blue-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
