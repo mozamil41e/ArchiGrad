@@ -28,6 +28,13 @@ class Show extends Component
         if (!auth()->check()) {
             abort(403);
         }
+        if ($this->project->file_path == null) {
+           return session()->flash('error', 'لا يوجد ملف للمشروع');
+        }
+
+        if (!Storage::disk('public')->exists($this->project->file_path)) {
+            return session()->flash('error', 'الملف غير موجود حالياً');
+        }
 
         $this->project->is_archiv = true;
         $this->project->save();
