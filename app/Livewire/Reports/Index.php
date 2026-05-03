@@ -36,12 +36,7 @@ class Index extends Component
         'F'  => 25,
     ];
 
-    public function updated($property)
-    {
-        if (in_array($property, ['year', 'department_id'])) {
-            // Cache key is based on filters, so Cache::remember handles invalidation automatically.
-        }
-    }
+
 
     public function resetFilters()
     {
@@ -100,6 +95,13 @@ class Index extends Component
             // Eager-load departments with their project grades (string values), filtered by is_archiv=1
             $departments = Department::query()
             ->when($this->department_id, fn($q) => $q->where('id', $this->department_id))
+
+            ->whereHas('projects', function ($q) {
+                $q->where('is_archiv', 1)
+                ->when($this->year, fn($q) => $q->where('year', $this->year));
+            }, '>=', 30)
+
+
             ->withCount(['projects' => function ($q) {
                 $q->where('is_archiv', 1)
                   ->when($this->year, fn($q) => $q->where('year', $this->year));
