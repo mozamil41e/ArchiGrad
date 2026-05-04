@@ -10,9 +10,11 @@ use Livewire\Component;
 
 class Show extends Component
 {
-    #[Title('عرض المشروع')]
+
 
     public Project $project;
+
+
 
     public function mount(Project $project)
     {
@@ -23,17 +25,12 @@ class Show extends Component
         );
     }
 
+
+
     public function archiveProject()
     {
         if (!auth()->check()) {
             abort(403);
-        }
-        if ($this->project->file_path == null) {
-           return session()->flash('error', 'لا يوجد ملف للمشروع');
-        }
-
-        if (!Storage::disk('public')->exists($this->project->file_path)) {
-            return session()->flash('error', 'الملف غير موجود حالياً');
         }
 
         $this->project->is_archiv = true;
@@ -75,6 +72,8 @@ class Show extends Component
         if($project->grade == "pending") {
             $project->grade = "لم يتم التقييم بعد";
         }
-        return view('livewire.projects.show', compact('project'));
+        return view('livewire.projects.show', compact('project'))->layout('components.layouts.app', [
+            'title' => $project->title
+        ]);
     }
 }
