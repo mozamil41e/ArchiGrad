@@ -56,11 +56,8 @@
                 <div class="flex items-start justify-between gap-4 mb-4">
                     <h1 class="text-3xl md:text-4xl font-bold text-gray-900 flex-1" x-text="project.title"></h1>
                     <div class="flex items-center gap-2">
-<<<<<<< HEAD
-                        @if(!$project->is_archiv)
-=======
-                         @if(!$project->is_archiv)
->>>>>>> e382611359ef7059279ab15454fb7c717a13a248
+
+                       @if(!$project->is_archiv)
                         <a wire:navigate href="{{ route('projects-live.edit', $project->id) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-sm hover:shadow-md whitespace-nowrap">
                             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
