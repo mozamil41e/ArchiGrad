@@ -32,6 +32,18 @@ class Show extends Component
         if (!auth()->check()) {
             abort(403);
         }
+        if($this->project->file_path == null) {
+            session()->flash('error', 'عذراً، لا يمكن أرشفة المشروع بدون ملف');
+            return;
+        }
+        if($this->project->grade == "pending") {
+            session()->flash('error', 'عذراً، لا يمكن أرشفة المشروع بدون درجة');
+            return;
+        }
+        if(Storage::disk('public')->exists($this->project->file_path) == false) {
+            session()->flash('error', 'عذراً، الملف غير موجود حالياً');
+            return;
+        }
 
         $this->project->is_archiv = true;
         $this->project->save();
