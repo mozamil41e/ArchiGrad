@@ -47,8 +47,8 @@ class Edit extends Component
         $this->projectId = $project?->id;
 
         // Load dropdown data
-        $this->supervisors = Supervisor::all();
         $this->departments = Department::all();
+        $this->supervisors = collect();
 
         // Generate years (current year and previous 5 years)
         $currentYear = Carbon::now()->year;
@@ -62,7 +62,18 @@ class Edit extends Component
         // If editing existing project, load data
         if ($project) {
             $this->loadProjectData($project);
+            $this->supervisors = Supervisor::where('department_id', $this->department_id)->get();
         }
+    }
+
+    public function updatedDepartmentId($value)
+    {
+        if ($value) {
+            $this->supervisors = Supervisor::where('department_id', $value)->get();
+        } else {
+            $this->supervisors = collect();
+        }
+        $this->supervisor_id = '';
     }
 
     public function loadProjectData(Project $project)

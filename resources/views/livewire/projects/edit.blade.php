@@ -203,24 +203,27 @@
                 </div>
 
                 <!-- Supervisor -->
+
                 <div class="mb-6">
-                    <label for="supervisor_id" class="block text-sm font-semibold text-gray-700 mb-2">
-                        المشرف <span class="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="supervisor_id"
-                        wire:model="supervisor_id"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('supervisor_id') border-red-500 @enderror"
-                    >
-                        <option value="">اختر المشرف</option>
-                        @foreach($supervisors as $supervisor)
-                            <option value="{{ $supervisor->id }}">{{ $supervisor->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('supervisor_id')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                        <label for="department_id" class="block text-sm font-semibold text-gray-700 mb-2">
+                            التخصص <span class="text-red-500">*</span>
+                        </label>
+                        <select
+                            id="department_id"
+                            wire:model.live="department_id"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('department_id') border-red-500 @enderror"
+                        >
+                            <option value="">اختر التخصص</option>
+                            @foreach($departments as $department)
+                                <option value="{{ $department->id }}">{{ $department->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('department_id')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                 </div>
+
+
 
                 <!-- Year and Department Row -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -245,24 +248,26 @@
                     </div>
 
                     <!-- Department -->
+
                     <div>
-                        <label for="department_id" class="block text-sm font-semibold text-gray-700 mb-2">
-                            التخصص <span class="text-red-500">*</span>
-                        </label>
-                        <select
-                            id="department_id"
-                            wire:model="department_id"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('department_id') border-red-500 @enderror"
-                        >
-                            <option value="">اختر التخصص</option>
-                            @foreach($departments as $department)
-                                <option value="{{ $department->id }}">{{ $department->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('department_id')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                    <label for="supervisor_id" class="block text-sm font-semibold text-gray-700 mb-2">
+                        المشرف <span class="text-red-500">*</span>
+                    </label>
+                    <select
+                        id="supervisor_id"
+                        wire:model="supervisor_id"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('supervisor_id') border-red-500 @enderror"
+                    >
+                        <option value="">اختر المشرف</option>
+                        @foreach($supervisors as $supervisor)
+                            <option value="{{ $supervisor->id }}">{{ $supervisor->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('supervisor_id')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                     </div>
+
                 </div>
 
                 <!-- Defense Date and Grade Row -->
