@@ -125,7 +125,8 @@
         <!-- Project Information Card -->
 
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">معلومات المشروع</h2>
+
+                <h1 class="text-2xl font-bold text-gray-900 mb-6"x-text="project.title"></h1>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <!-- Students -->
@@ -267,6 +268,8 @@
     </div>
 
 </div>
+
+
 <script>
     function projectDetails() {
         return {

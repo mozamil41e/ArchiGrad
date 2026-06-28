@@ -130,4 +130,5 @@ class Index extends Component
 
         return view('livewire.departments.index', compact('departments'));
     }
+
 }

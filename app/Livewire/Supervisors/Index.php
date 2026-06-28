@@ -125,7 +125,7 @@ class Index extends Component
                 'projects',
             ])
             ->orderBy('name')
-            ->paginate(3);
+            ->paginate(6);
         $departments = Department::select('id', 'name')->get();
         return view('livewire.supervisors.index', compact('supervisors', 'departments'));
     }

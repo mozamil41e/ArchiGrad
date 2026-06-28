@@ -31,15 +31,19 @@ class Project extends Model
     {
         return $this->belongsTo(Supervisor::class, 'supervisor_id');
     }
+
+
     public function department()
     {
         return $this->belongsTo(Department::class, 'department_id');
     }
 
+
     public function students()
     {
         return $this->hasMany(Student::class, 'project_id');
     }
+
 
     public function scopeFilter($query, $filters)
     {
@@ -59,4 +63,6 @@ class Project extends Model
             ->when($filters['supervisor_id'] ?? null, fn($q, $supervisor) => $q->where('supervisor_id', $supervisor))
             ->when(isset($filters['is_archiv']) && $filters['is_archiv'] !== '', fn($q) => $q->where('is_archiv', $filters['is_archiv']));
     }
+
+
 }

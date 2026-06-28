@@ -13,6 +13,8 @@ class Department extends Model
     public $fillable = [
         'name',
     ];
+
+    
     public function projects()
     {
         return $this->hasMany(Project::class, 'department_id', 'id');
