@@ -167,6 +167,8 @@ class Edit extends Component
         'department_id.exists' => 'التخصص المحدد غير موجود',
         'defenseDate.required' => 'تاريخ المناقشة مطلوب',
         'defenseDate.date' => 'تاريخ المناقشة غير صحيح',
+        'pdfFile.mimes' => 'الملف يجب أن يكون بصيغة PDF',
+        'pdfFile.max' => 'الملف يجب أن لا يتجاوز 10 ميجابايت',
     ],);
 
 

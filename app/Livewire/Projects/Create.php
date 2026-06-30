@@ -6,8 +6,10 @@ use App\Models\Department;
 use App\Models\Project;
 use App\Models\Supervisor;
 use App\Models\Student;
+use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+
 
 class Create extends Component
 {
@@ -57,7 +59,7 @@ class Create extends Component
      * @param int $threshold نسبة التشابه المئوية لمنع التكرار (مثلاً 70)
      * @return array يحتوي على المشاريع المشابهة مع نسبة التشابه
      */
-    function checkProjectSimilarity(string $newTitle, array $existingTitles, int $threshold = 70): array
+    function checkProjectSimilarity(string $newTitle, array $existingTitles, int $threshold =90): array
     {
         $similarProjects = [];
 
@@ -126,7 +128,10 @@ class Create extends Component
         // Load supervisors and departments
         $this->supervisors = Supervisor::all();
         $this->departments = Department::all();
-        $this->existingProjects = Project::pluck('title')->toArray();
+        $lastFourYears = Carbon::now()->year - 2;
+        $this->existingProjects = Project::where('year', '>=', $lastFourYears)
+            ->pluck('title')
+            ->toArray();
 
         // Generate years (current year and 4 previous years)
         $currentYear = date('Y');

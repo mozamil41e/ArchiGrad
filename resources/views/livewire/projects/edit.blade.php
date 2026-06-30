@@ -65,7 +65,7 @@
         </div>
 
         <!-- Form -->
-        <form wire:submit="save" class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+        <form wire:submit="save" enctype="multipart/form-data" class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
 
             <!-- Step 1: Basic Information -->
             @if($currentStep === 1)
