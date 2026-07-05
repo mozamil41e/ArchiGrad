@@ -15,7 +15,7 @@
                     <input
                         type="text"
                         name="search"
-                        placeholder="ابحث عن مشروع بالعنوان،أو المشرف..."
+                        placeholder="ابحث عن مشروع بالعنوان ..."
                         class="w-full px-6 py-4 pr-12 rounded-lg border-2 border-gray-200 focus:border-blue-500 focus:outline-none text-lg shadow-sm"
                     >
                     <button type="submit" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600">

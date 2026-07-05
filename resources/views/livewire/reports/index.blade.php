@@ -120,7 +120,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1" wire:loading.class="opacity-60">
 
         <!-- Stats Cards (Bonus) -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <!-- Total Projects -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <div class="flex items-center justify-between">
@@ -155,25 +155,7 @@
                 </div>
             </div>
 
-            <!-- Top Department -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-500">أفضل قسم أداءً</p>
-                        <h3 class="text-base font-bold text-gray-900 mt-1 truncate max-w-[160px]">{{ $data['stats']['top_department'] }}</h3>
-                        @if($data['stats']['top_department'] !== 'N/A')
-                            <span class="mt-1 px-2.5 py-0.5 inline-flex text-sm font-bold rounded-full {{ $data['stats']['top_dept_color'] }}">
-                                {{ $data['stats']['top_dept_grade'] }}
-                            </span>
-                        @endif
-                    </div>
-                    <div class="bg-yellow-50 p-3 rounded-lg">
-                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
+
         </div>
 
         <!-- Grade Scale Reference -->

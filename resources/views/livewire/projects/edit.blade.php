@@ -353,6 +353,9 @@
                             </p>
                             <p class="mt-1 text-xs text-gray-500">PDF فقط (الحد الأقصى: 10MB)</p>
                         </label>
+                        <div wire:loading wire:target="pdfFile">
+                            جاري رفع الملف...
+                        </div>
                         @if ($pdfFile)
                             <p class="mt-3 text-sm text-green-600 font-medium">تم اختيار: {{ $pdfFile->getClientOriginalName() }}</p>
                         @endif
