@@ -15,6 +15,8 @@ use App\Livewire\Projects\Show as ProjectsShow;
 
 use App\Livewire\Supervisors\Index as SupervisorsIndex;
 
+use App\Livewire\Users\Index as UsersIndex;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', LoginApp::class)->name('login');
@@ -49,6 +51,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/', \App\Livewire\Reports\Index::class)->name('index');
     });
 
+
+    Route::prefix('users-live')->name('users-live.')->group(function () {
+        Route::get('/', UsersIndex::class)->name('index');
+    });
 
 
     Route::post('/logout', [Logout::class, 'logout'])->name('logout');

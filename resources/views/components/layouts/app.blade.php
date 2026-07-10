@@ -71,6 +71,12 @@
                                 التقارير والإحصائيات
                             </x-nav-link>
 
+                            @can('viewAny', App\Models\User::class)
+                                <x-nav-link href="{{ route('users-live.index') }}" active="users-live.index">
+                                    إدارة المستخدمين
+                                </x-nav-link>
+                            @endcan
+
                             <!-- ضع هذا في آخر الـ nav-links -->
                             <div class="flex items-center space-x-reverse space-x-4 border-r border-gray-200 pr-6">
                                 <span class="text-base font-bold text-gray-900">{{ auth()->user()->name }}</span>
@@ -132,6 +138,12 @@
                             <x-nav-link href="{{ route('reports-live.index') }}" active="reports-live.*">
                                 التقارير والإحصائيات
                             </x-nav-link>
+
+                            @can('viewAny', App\Models\User::class)
+                                <x-nav-link href="{{ route('users-live.index') }}" active="users-live.index">
+                                    إدارة المستخدمين
+                                </x-nav-link>
+                            @endcan
                         @endauth
                     </div>
                 </div>

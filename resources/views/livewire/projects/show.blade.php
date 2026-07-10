@@ -67,6 +67,7 @@
                         @endif
                     @if($project->grade !== \App\Enums\Grade::Pending)
                         @if($project->is_archiv)
+                            @can('unarchive', $project)
                             <button type="button" @click="
                                 Swal.fire({
                                     title: 'تأكيد الإلغاء',
@@ -88,7 +89,9 @@
                                 </svg>
                                 إلغاء الأرشفة
                             </button>
+                            @endcan
                         @else
+                            @can('archive', $project)
                             <button type="button" @click="
                                 Swal.fire({
                                     title: 'تأكيد الأرشفة',
@@ -110,8 +113,32 @@
                                 </svg>
                                 أرشفة
                             </button>
+                            @endcan
                         @endif
                     @endif
+                    @can('delete', $project)
+                        <button type="button" @click="
+                            Swal.fire({
+                                title: 'تأكيد الحذف',
+                                text: 'هل أنت متأكد من حذف هذا المشروع؟ يمكن استرجاعه لاحقًا من قبل مدير النظام.',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#dc2626',
+                                cancelButtonColor: '#6b7280',
+                                confirmButtonText: 'نعم، احذف',
+                                cancelButtonText: 'تراجع'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    $wire.deleteProject();
+                                }
+                            })
+                        " wire:key="delete-btn" class="inline-flex items-center px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition shadow-sm hover:shadow-md whitespace-nowrap">
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                            حذف
+                        </button>
+                    @endcan
                     </div>
                 </div>
                 <div class="flex flex-wrap gap-2">

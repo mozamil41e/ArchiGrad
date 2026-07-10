@@ -3,14 +3,18 @@
 namespace App\Livewire\Projects;
 
 use App\Actions\Projects\ArchiveProject;
+use App\Actions\Projects\DeleteProject;
 use App\Actions\Projects\UnarchiveProject;
 use App\Exceptions\ProjectArchivingException;
 use App\Models\Project;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 
 class Show extends Component
 {
+    use AuthorizesRequests;
+
     public Project $project;
 
     public function mount(Project $project)
@@ -24,7 +28,7 @@ class Show extends Component
 
     public function archiveProject(ArchiveProject $archiveProject)
     {
-        abort_unless(auth()->check(), 403);
+        $this->authorize('archive', $this->project);
 
         try {
             $archiveProject->execute($this->project);
@@ -40,11 +44,22 @@ class Show extends Component
 
     public function unarchiveProject(UnarchiveProject $unarchiveProject)
     {
-        abort_unless(auth()->check(), 403);
+        $this->authorize('unarchive', $this->project);
 
         $unarchiveProject->execute($this->project);
 
         session()->flash('message', 'تم إلغاء أرشفة المشروع بنجاح');
+    }
+
+    public function deleteProject(DeleteProject $deleteProject)
+    {
+        $this->authorize('delete', $this->project);
+
+        $deleteProject->execute($this->project);
+
+        session()->flash('message', 'تم حذف المشروع بنجاح');
+
+        return $this->redirectRoute('projects-live.index', navigate: true);
     }
 
     public function downloadPdf()
