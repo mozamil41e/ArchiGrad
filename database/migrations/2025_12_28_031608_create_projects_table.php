@@ -27,6 +27,7 @@ return new class extends Migration
 
             $table->index('title');
             $table->index('description');
+            // $table->fullText('description');mysql fulltext not support arabic
             $table->index('year');
         });
     }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Grade;
+use App\Filters\Projects\ProjectFilters;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -48,24 +49,9 @@ class Project extends Model
     }
 
 
-    public function scopeFilter($query, $filters)
+    public function scopeFilter($query, array $filters)
     {
-        return $query
-            ->when(
-                $filters['search'] ?? null,
-                fn($q, $search) =>
-                $q->where(
-                    fn($q) =>
-                    $q->where('id', $search)
-                        ->orWhere('title', 'like', "%$search%")
-                        ->orWhere('description', 'like', "%$search%")
-                )
-            )
-            ->when($filters['year'] ?? null, fn($q, $year) => $q->where('year', $year))
-            ->when($filters['department_id'] ?? null, fn($q, $department) => $q->where('department_id', $department))
-            ->when($filters['supervisor_id'] ?? null, fn($q, $supervisor) => $q->where('supervisor_id', $supervisor))
-            ->when(isset($filters['is_archiv']) && $filters['is_archiv'] !== '', fn($q) => $q->where('is_archiv', $filters['is_archiv']));
+        return app(ProjectFilters::class)->apply($query, $filters);
     }
-
 
 }
