@@ -2,111 +2,77 @@
 
 namespace App\Livewire\Departments;
 
+use App\Actions\Departments\CreateDepartment;
+use App\Actions\Departments\DeleteDepartment;
+use App\Actions\Departments\UpdateDepartment;
+use App\Livewire\Forms\DepartmentForm;
 use App\Models\Department;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\Attributes\Url;
-
-
 
 class Index extends Component
 {
-
     use WithPagination;
 
     #[Url(history: true)]
     public $search = '';
 
-    // Modal state
-    public $showModal = false;
-    public $isEditMode = false;
-    public $confirmingDeletion = false;
+    public bool $showModal = false;
+    public bool $isEditMode = false;
+    public bool $confirmingDeletion = false;
 
-    // Form data
-    public $departmentId;
-    public $name = '';
-    public $description = '';
+    public DepartmentForm $form;
+    public ?int $deletingId = null;
 
-    protected $rules = [
-        'name' => 'required|string|max:100|unique:departments,name',
-    ];
-
-    protected $messages = [
-        'name.required' => 'اسم القسم مطلوب.',
-        'name.unique' => 'هذا القسم موجود مسبقاً.',
-        'name.max' => 'اسم القسم يجب ألا يتجاوز 100 حرف.',
-    ];
-
-    public function mount()
-    {
-        // تهيئة الخصائص من الـ request إذا كانت موجودة
-        $this->search = request('search', $this->search);
-    }
-
-    public function openModal()
+    public function openModal(): void
     {
         $this->resetValidation();
-        $this->reset(['name', 'description', 'departmentId', 'isEditMode']);
+        $this->form->reset();
+        $this->isEditMode = false;
         $this->showModal = true;
     }
 
-    public function closeModal()
+    public function closeModal(): void
     {
         $this->showModal = false;
     }
 
-    public function edit(Department $department)
+    public function edit(Department $department): void
     {
         $this->resetValidation();
-        $this->departmentId = $department->id;
-        $this->name = $department->name;
+        $this->form->fromDepartment($department);
         $this->isEditMode = true;
         $this->showModal = true;
     }
 
-    public function save()
+    public function save(CreateDepartment $createDepartment, UpdateDepartment $updateDepartment): void
     {
-        $validationRules = $this->rules;
-        if ($this->isEditMode) {
-            $validationRules['name'] = 'required|string|max:100|unique:departments,name,' . $this->departmentId;
-        }
-
-        $this->validate($validationRules);
+        $this->form->validate();
 
         if ($this->isEditMode) {
-            $department = $this->getDepartment($this->departmentId);
-            $department->update([
-                'name' => $this->name,
-            ]);
+            $updateDepartment->execute(Department::findOrFail($this->form->departmentId), $this->form);
             session()->flash('message', 'تم تحديث القسم بنجاح.');
         } else {
-            Department::create([
-                'name' => $this->name,
-            ]);
+            $createDepartment->execute($this->form);
             session()->flash('message', 'تم إضافة القسم بنجاح.');
         }
 
         $this->closeModal();
     }
 
-    public function confirmDelete($id)
+    public function confirmDelete(int $id): void
     {
-        $this->departmentId = $id;
+        $this->deletingId = $id;
         $this->confirmingDeletion = true;
     }
 
-    public function delete()
+    public function delete(DeleteDepartment $deleteDepartment): void
     {
-        $this->getDepartment($this->departmentId)->delete();
+        $deleteDepartment->execute(Department::findOrFail($this->deletingId));
         $this->confirmingDeletion = false;
         session()->flash('message', 'تم حذف القسم بنجاح.');
     }
-
-    public function getDepartment($id)
-    {
-        return Department::find($id);
-    }
-
 
     public function render()
     {
@@ -117,10 +83,10 @@ class Index extends Component
             ->withCount([
                 'supervisors',
                 'projects',
-                'projects as archived_projects_count' => function($query) {
+                'projects as archived_projects_count' => function ($query) {
                     $query->where('is_archiv', true);
                 },
-                'projects as notarchived_projects_count' => function($query) {
+                'projects as notarchived_projects_count' => function ($query) {
                     $query->where('is_archiv', false);
                 },
                 'students',
@@ -130,5 +96,4 @@ class Index extends Component
 
         return view('livewire.departments.index', compact('departments'));
     }
-
 }

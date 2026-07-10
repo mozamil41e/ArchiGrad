@@ -2,118 +2,78 @@
 
 namespace App\Livewire\Supervisors;
 
+use App\Actions\Supervisors\CreateSupervisor;
+use App\Actions\Supervisors\DeleteSupervisor;
+use App\Actions\Supervisors\UpdateSupervisor;
+use App\Livewire\Forms\SupervisorForm;
 use App\Models\Department;
 use App\Models\Supervisor;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\Attributes\Url;
-
-
 
 class Index extends Component
 {
-
     use WithPagination;
 
     #[Url(history: true)]
     public $search = '';
 
-    // Modal state
-    public $showModal = false;
-    public $isEditMode = false;
-    public $confirmingDeletion = false;
+    public bool $showModal = false;
+    public bool $isEditMode = false;
+    public bool $confirmingDeletion = false;
 
-    // Form data
-    public $supervisorId;
-    public $name = '';
-    public $department_id = '';
+    public SupervisorForm $form;
+    public ?int $deletingId = null;
 
-    protected $rules = [
-        'name' => 'required|string|max:100|unique:supervisors,name',
-        'department_id' => 'required|exists:departments,id',
-    ];
-
-    protected $messages = [
-        'name.required' => 'اسم المشرف مطلوب.',
-        'name.unique' => 'هذا المشرف موجود مسبقاً.',
-        'name.max' => 'اسم المشرف يجب ألا يتجاوز 100 حرف.',
-        'department_id.required' => 'القسم مطلوب.',
-        'department_id.exists' => 'القسم غير موجود.',
-    ];
-
-    public function mount()
-    {
-        // تهيئة الخصائص من الـ request إذا كانت موجودة
-        $this->search = request('search', $this->search);
-    }
-
-    public function openModal()
+    public function openModal(): void
     {
         $this->resetValidation();
-        $this->reset(['name', 'department_id', 'supervisorId', 'isEditMode']);
+        $this->form->reset();
+        $this->isEditMode = false;
         $this->showModal = true;
     }
 
-    public function closeModal()
+    public function closeModal(): void
     {
         $this->showModal = false;
     }
 
-    public function edit(Supervisor $supervisor)
+    public function edit(Supervisor $supervisor): void
     {
         $this->resetValidation();
-        $this->supervisorId = $supervisor->id;
-        $this->name = $supervisor->name;
-        $this->department_id = $supervisor->department_id;
+        $this->form->fromSupervisor($supervisor);
         $this->isEditMode = true;
         $this->showModal = true;
     }
 
-    public function save()
+    public function save(CreateSupervisor $createSupervisor, UpdateSupervisor $updateSupervisor): void
     {
-        $validationRules = $this->rules;
-        if ($this->isEditMode) {
-            $validationRules['name'] = 'required|string|max:100|unique:supervisors,name,' . $this->supervisorId;
-        }
-
-        $this->validate($validationRules);
+        $this->form->validate();
 
         if ($this->isEditMode) {
-            $supervisor = $this->getSupervisor($this->supervisorId);
-            $supervisor->update([
-                'name' => $this->name,
-                'department_id' => $this->department_id,
-            ]);
+            $updateSupervisor->execute(Supervisor::findOrFail($this->form->supervisorId), $this->form);
             session()->flash('message', 'تم تحديث المشرف بنجاح.');
         } else {
-            Supervisor::create([
-                'name' => $this->name,
-                'department_id' => $this->department_id,
-            ]);
+            $createSupervisor->execute($this->form);
             session()->flash('message', 'تم إضافة المشرف بنجاح.');
         }
 
         $this->closeModal();
     }
 
-    public function confirmDelete($id)
+    public function confirmDelete(int $id): void
     {
-        $this->supervisorId = $id;
+        $this->deletingId = $id;
         $this->confirmingDeletion = true;
     }
 
-    public function delete()
+    public function delete(DeleteSupervisor $deleteSupervisor): void
     {
-        $this->getSupervisor($this->supervisorId)->delete();
+        $deleteSupervisor->execute(Supervisor::findOrFail($this->deletingId));
         $this->confirmingDeletion = false;
         session()->flash('message', 'تم حذف المشرف بنجاح.');
     }
-
-    public function getSupervisor($id)
-    {
-        return Supervisor::find($id);
-    }
-
 
     public function render()
     {
@@ -121,12 +81,12 @@ class Index extends Component
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%');
             })
-            ->withCount([
-                'projects',
-            ])
+            ->withCount(['projects'])
             ->orderBy('name')
             ->paginate(6);
+
         $departments = Department::select('id', 'name')->get();
+
         return view('livewire.supervisors.index', compact('supervisors', 'departments'));
     }
 }

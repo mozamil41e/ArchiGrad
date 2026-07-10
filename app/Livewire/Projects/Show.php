@@ -2,19 +2,16 @@
 
 namespace App\Livewire\Projects;
 
+use App\Actions\Projects\ArchiveProject;
+use App\Actions\Projects\UnarchiveProject;
+use App\Exceptions\ProjectArchivingException;
 use App\Models\Project;
 use Illuminate\Support\Facades\Storage;
-use Livewire\Attributes\Title;
 use Livewire\Component;
-
 
 class Show extends Component
 {
-
-
     public Project $project;
-
-
 
     public function mount(Project $project)
     {
@@ -25,46 +22,30 @@ class Show extends Component
         );
     }
 
-
-
-    public function archiveProject()
+    public function archiveProject(ArchiveProject $archiveProject)
     {
-        if (!auth()->check()) {
-            abort(403);
-        }
-        if($this->project->file_path == null) {
-            session()->flash('error', 'عذراً، لا يمكن أرشفة المشروع بدون ملف');
-            return;
-        }
-        if($this->project->grade == "pending") {
-            session()->flash('error', 'عذراً، لا يمكن أرشفة المشروع بدون درجة');
-            return;
-        }
-        if(Storage::disk('public')->exists($this->project->file_path) == false) {
-            session()->flash('error', 'عذراً، الملف غير موجود حالياً');
-            return;
-        }
+        abort_unless(auth()->check(), 403);
 
-        $this->project->is_archiv = true;
-        $this->project->save();
+        try {
+            $archiveProject->execute($this->project);
+        } catch (ProjectArchivingException $e) {
+            session()->flash('error', $e->getMessage());
+
+            return;
+        }
 
         session()->flash('message', 'تم أرشفة المشروع بنجاح');
         $this->dispatch('project-archived');
     }
 
-    public function unarchiveProject()
+    public function unarchiveProject(UnarchiveProject $unarchiveProject)
     {
-        if (!auth()->check()) {
-            abort(403);
-        }
+        abort_unless(auth()->check(), 403);
 
-        $this->project->is_archiv = false;
-        $this->project->save();
+        $unarchiveProject->execute($this->project);
 
-       return session()->flash('message', 'تم إلغاء أرشفة المشروع بنجاح');
+        session()->flash('message', 'تم إلغاء أرشفة المشروع بنجاح');
     }
-
-// download pdf function
 
     public function downloadPdf()
     {
@@ -80,12 +61,7 @@ class Show extends Component
 
     public function render()
     {
-        $project = $this->project;
-        if($project->grade == "pending") {
-            $project->grade = "لم يتم التقييم بعد";
-        }
-        return view('livewire.projects.show', compact('project'))->layout('components.layouts.app', [
-            'title' => $project->title
-        ]);
+        return view('livewire.projects.show', ['project' => $this->project])
+            ->layout('components.layouts.app', ['title' => $this->project->title]);
     }
 }

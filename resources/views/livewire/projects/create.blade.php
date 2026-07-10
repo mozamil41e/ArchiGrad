@@ -74,16 +74,16 @@
                     <input
                         type="text"
                         id="title"
-                        wire:model.blur="title"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('title') border-red-500 @enderror"
+                        wire:model.blur="form.title"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('form.title') border-red-500 @enderror"
                         placeholder="أدخل عنوان المشروع"
                     >
-                    @error('title')
+                    @error('form.title')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
 
                     {{-- Similarity Warning --}}
-                    @if(isset($similarProjects['pass']) && !$similarProjects['pass'])
+                    @if(!empty($similarProjects))
                         <div class="mt-4 p-4 bg-yellow-50 border-r-4 border-yellow-400 rounded-lg">
                             <div class="flex items-center mb-2">
                                 <svg class="w-5 h-5 text-yellow-500 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -92,13 +92,11 @@
                                 <h4 class="text-sm font-bold text-yellow-800"> ⚠️  تنبيه: تم العثور على مشاريع مشابهة قبل اقل من ثلاث سنوات</h4>
                             </div>
                             <ul class="space-y-1">
-                                @foreach($similarProjects as $key => $project)
-                                    @if($key !== 'pass')
-                                        <li class="text-xs text-yellow-700 flex justify-between items-center">
-                                            <span>{{ $project['existing_title'] }}</span>
-                                            <span class="font-bold mr-2">{{ $project['similarity'] }}%</span>
-                                        </li>
-                                    @endif
+                                @foreach($similarProjects as $project)
+                                    <li class="text-xs text-yellow-700 flex justify-between items-center">
+                                        <span>{{ $project['existing_title'] }}</span>
+                                        <span class="font-bold mr-2">{{ $project['similarity'] }}%</span>
+                                    </li>
                                 @endforeach
                             </ul>
                             <p class="mt-2 text-xs text-yellow-600 italic">يرجى التأكد من أن مشروعك يقدم فكرة جديدة أو تطوير ملموس للمشاريع السابقة.</p>
@@ -113,12 +111,12 @@
                     </label>
                     <textarea
                         id="summary"
-                        wire:model="summary"
+                        wire:model="form.summary"
                         rows="6"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none @error('summary') border-red-500 @enderror"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none @error('form.summary') border-red-500 @enderror"
                         placeholder="أدخل ملخصاً شاملاً للمشروع..."
                     ></textarea>
-                    @error('summary')
+                    @error('form.summary')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                     <p class="mt-1 text-sm text-gray-500">الحد الأدنى: 100 حرف</p>
@@ -154,16 +152,16 @@
                     </div>
 
                     <div class="space-y-3">
-                        @foreach($students as $index => $student)
+                        @foreach($form->students as $index => $student)
                             <div class="grid grid-cols-3 gap-2 items-start" wire:key="student-{{ $index }}">
                                 <div class="flex-1">
                                     <input
                                         type="text"
-                                        wire:model="students.{{ $index }}.name"
-                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('students.'.$index.'.name') border-red-500 @enderror"
+                                        wire:model="form.students.{{ $index }}.name"
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('form.students.'.$index.'.name') border-red-500 @enderror"
                                         placeholder="أدخل اسم الطالب {{ $index + 1 }}"
                                     >
-                                    @error('students.'.$index.'.name')
+                                    @error('form.students.'.$index.'.name')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -179,11 +177,11 @@
                                      }">
                                     <input
                                         type="text"
-                                        wire:model="students.{{ $index }}.university_number"
+                                        wire:model="form.students.{{ $index }}.university_number"
                                         inputmode="numeric"
                                         maxlength="11"
                                         :class="uniError ? 'border-red-500 focus:ring-red-400' : ($el.value && $el.value.length === 11 ? 'border-green-500 focus:ring-green-400' : 'border-gray-300 focus:ring-blue-500')"
-                                        class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-colors @error('students.'.$index.'.university_number') border-red-500 @enderror"
+                                        class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-colors @error('form.students.'.$index.'.university_number') border-red-500 @enderror"
                                         placeholder="الرقم الجامعي (11 أرقام)"
                                         @input="
                                             $el.value = $el.value.replace(/\D/g, '').slice(0, 11);
@@ -193,12 +191,12 @@
                                     {{-- Alpine real-time error --}}
                                     <p x-show="uniError" x-text="uniError" class="mt-1 text-sm text-red-600" style="display:none;"></p>
                                     {{-- Livewire server-side error --}}
-                                    @error('students.'.$index.'.university_number')
+                                    @error('form.students.'.$index.'.university_number')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 <div class="flex justify-end">
-                                    @if(count($students) > 1)
+                                    @if(count($form->students) > 1)
                                         <button
                                             type="button"
                                             wire:click="removeStudent({{ $index }})"
@@ -214,7 +212,7 @@
                             </div>
                         @endforeach
                     </div>
-                    @error('students')
+                    @error('form.students')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -226,15 +224,15 @@
                     </label>
                     <select
                         id="supervisor_id"
-                        wire:model="supervisor_id"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('supervisor_id') border-red-500 @enderror"
+                        wire:model="form.supervisor_id"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('form.supervisor_id') border-red-500 @enderror"
                     >
                         <option value="">اختر المشرف</option>
                         @foreach($supervisors as $supervisor)
                             <option value="{{ $supervisor->id }}">{{ $supervisor->name }}</option>
                         @endforeach
                     </select>
-                    @error('supervisor_id')
+                    @error('form.supervisor_id')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -248,15 +246,15 @@
                         </label>
                         <select
                             id="year"
-                            wire:model="year"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('year') border-red-500 @enderror"
+                            wire:model="form.year"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('form.year') border-red-500 @enderror"
                         >
                             <option value="">اختر السنة</option>
                             @foreach($years as $y)
                                 <option value="{{ $y }}">{{ $y }}</option>
                             @endforeach
                         </select>
-                        @error('year')
+                        @error('form.year')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
@@ -268,23 +266,22 @@
                         </label>
                         <select
                             id="department_id"
-                            wire:model="department_id"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('department_id') border-red-500 @enderror"
+                            wire:model="form.department_id"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('form.department_id') border-red-500 @enderror"
                         >
                             <option value="">اختر التخصص</option>
                             @foreach($departments as $department)
                                 <option value="{{ $department->id }}">{{ $department->name }}</option>
                             @endforeach
                         </select>
-                        @error('department_id')
+                        @error('form.department_id')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
 
-                <!-- Defense Date and Grade Row -->
+                <!-- Defense Date -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <!-- Defense Date -->
                     <div>
                         <label for="defenseDate" class="block text-sm font-semibold text-gray-700 mb-2">
                             تاريخ المناقشة <span class="text-red-500">*</span>
@@ -292,16 +289,14 @@
                         <input
                             type="date"
                             id="defenseDate"
-                            wire:model="defenseDate"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('defenseDate') border-red-500 @enderror"
+                            wire:model="form.defenseDate"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('form.defenseDate') border-red-500 @enderror"
                         >
-                        @error('defenseDate')
+                        @error('form.defenseDate')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
-
-
 
             </div>
             @endif

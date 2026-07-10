@@ -65,7 +65,7 @@
                             تعديل
                         </a>
                         @endif
-                    @if($project->grade != "لم يتم التقييم بعد")
+                    @if($project->grade !== \App\Enums\Grade::Pending)
                         @if($project->is_archiv)
                             <button type="button" @click="
                                 Swal.fire({
@@ -226,7 +226,7 @@
                         </div>
                         <div class="mr-4">
                             <p class="text-sm font-medium text-gray-500">التقدير</p>
-                            <p class="text-lg text-gray-900 font-semibold" x-text="project.grade"></p>
+                            <p class="text-lg text-gray-900 font-semibold">{{ $project->grade->label() }}</p>
                         </div>
                     </div>
                 </div>

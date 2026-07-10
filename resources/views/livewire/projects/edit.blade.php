@@ -1,28 +1,24 @@
 <div>
- <!-- Page Header -->
+    <!-- Page Header -->
     <div class="bg-white border-b border-gray-200">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-2">
-                @if($projectId)
-                    تعديل المشروع
-                @else
-                    أرشفة مشروع جديد
-                @endif
-            </h2>
-            <p class="text-gray-600">
-                @if($projectId)
-                    قم بتحديث بيانات المشروع
-                @else
-                    قم بإضافة مشروع تخرج جديد إلى قاعدة البيانات
-                @endif
-            </p>
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">تعديل المشروع</h2>
+            <p class="text-gray-600">قم بتحديث بيانات المشروع</p>
         </div>
     </div>
 
     <!-- Main Content -->
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
+        <!-- Success Message -->
+        @if (session()->has('message'))
+            <x-messages.success> {{ session('message') }}</x-messages.success>
+        @endif
 
+        <!-- Error Message -->
+        @if (session()->has('error'))
+            <x-messages.erorr>{{ session('error') }}</x-messages.erorr>
+        @endif
 
         <!-- Step Indicator -->
         <div class="mb-8">
@@ -78,11 +74,11 @@
                     <input
                         type="text"
                         id="title"
-                        wire:model="title"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('title') border-red-500 @enderror"
+                        wire:model="form.title"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('form.title') border-red-500 @enderror"
                         placeholder="أدخل عنوان المشروع"
                     >
-                    @error('title')
+                    @error('form.title')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -94,12 +90,12 @@
                     </label>
                     <textarea
                         id="summary"
-                        wire:model="summary"
+                        wire:model="form.summary"
                         rows="6"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none @error('summary') border-red-500 @enderror"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none @error('form.summary') border-red-500 @enderror"
                         placeholder="أدخل ملخصاً شاملاً للمشروع..."
                     ></textarea>
-                    @error('summary')
+                    @error('form.summary')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                     <p class="mt-1 text-sm text-gray-500">الحد الأدنى: 100 حرف</p>
@@ -136,16 +132,16 @@
                     </div>
 
                     <div class="space-y-3">
-                        @foreach($students as $index => $student)
+                        @foreach($form->students as $index => $student)
                             <div class="grid grid-cols-3 gap-2 items-start" wire:key="student-{{ $index }}">
                                 <div>
                                     <input
                                         type="text"
-                                        wire:model="students.{{ $index }}"
-                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('students.'.$index) border-red-500 @enderror"
-                                        placeholder="أدخل اسم الطالب"
+                                        wire:model="form.students.{{ $index }}.name"
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('form.students.'.$index.'.name') border-red-500 @enderror"
+                                        placeholder="أدخل اسم الطالب {{ $index + 1 }}"
                                     >
-                                    @error('students.'.$index)
+                                    @error('form.students.'.$index.'.name')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -161,11 +157,11 @@
                                      }">
                                     <input
                                         type="text"
-                                        wire:model="universityNumbers.{{ $index }}"
+                                        wire:model="form.students.{{ $index }}.university_number"
                                         inputmode="numeric"
                                         maxlength="11"
                                         :class="uniError ? 'border-red-500 focus:ring-red-400' : ($el.value && $el.value.length === 11 ? 'border-green-500 focus:ring-green-400' : 'border-gray-300 focus:ring-blue-500')"
-                                        class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-colors @error('universityNumbers.'.$index) border-red-500 @enderror"
+                                        class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-colors @error('form.students.'.$index.'.university_number') border-red-500 @enderror"
                                         placeholder="الرقم الجامعي (11 أرقام)"
                                         @input="
                                             $el.value = $el.value.replace(/\D/g, '').slice(0, 11);
@@ -173,12 +169,12 @@
                                         "
                                     >
                                     <p x-show="uniError" x-text="uniError" class="mt-1 text-sm text-red-600" style="display:none;"></p>
-                                    @error('universityNumbers.'.$index)
+                                    @error('form.students.'.$index.'.university_number')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 <div class="flex justify-end">
-                                    @if(count($students) > 1)
+                                    @if(count($form->students) > 1)
                                         <button
                                             type="button"
                                             wire:click="removeStudent({{ $index }})"
@@ -194,38 +190,32 @@
                             </div>
                         @endforeach
                     </div>
-                    @error('students')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                    @error('universityNumbers')
+                    @error('form.students')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <!-- Supervisor -->
-
+                <!-- Department -->
                 <div class="mb-6">
-                        <label for="department_id" class="block text-sm font-semibold text-gray-700 mb-2">
-                            التخصص <span class="text-red-500">*</span>
-                        </label>
-                        <select
-                            id="department_id"
-                            wire:model.live="department_id"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('department_id') border-red-500 @enderror"
-                        >
-                            <option value="">اختر التخصص</option>
-                            @foreach($departments as $department)
-                                <option value="{{ $department->id }}">{{ $department->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('department_id')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                    <label for="department_id" class="block text-sm font-semibold text-gray-700 mb-2">
+                        التخصص <span class="text-red-500">*</span>
+                    </label>
+                    <select
+                        id="department_id"
+                        wire:model.live="form.department_id"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('form.department_id') border-red-500 @enderror"
+                    >
+                        <option value="">اختر التخصص</option>
+                        @foreach($departments as $department)
+                            <option value="{{ $department->id }}">{{ $department->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('form.department_id')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
-
-
-                <!-- Year and Department Row -->
+                <!-- Year and Supervisor Row -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <!-- Academic Year -->
                     <div>
@@ -234,40 +224,38 @@
                         </label>
                         <select
                             id="year"
-                            wire:model="year"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('year') border-red-500 @enderror"
+                            wire:model="form.year"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('form.year') border-red-500 @enderror"
                         >
                             <option value="">اختر السنة</option>
                             @foreach($years as $y)
                                 <option value="{{ $y }}">{{ $y }}</option>
                             @endforeach
                         </select>
-                        @error('year')
+                        @error('form.year')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <!-- Department -->
-
+                    <!-- Supervisor -->
                     <div>
-                    <label for="supervisor_id" class="block text-sm font-semibold text-gray-700 mb-2">
-                        المشرف <span class="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="supervisor_id"
-                        wire:model="supervisor_id"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('supervisor_id') border-red-500 @enderror"
-                    >
-                        <option value="">اختر المشرف</option>
-                        @foreach($supervisors as $supervisor)
-                            <option value="{{ $supervisor->id }}">{{ $supervisor->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('supervisor_id')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                        <label for="supervisor_id" class="block text-sm font-semibold text-gray-700 mb-2">
+                            المشرف <span class="text-red-500">*</span>
+                        </label>
+                        <select
+                            id="supervisor_id"
+                            wire:model="form.supervisor_id"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('form.supervisor_id') border-red-500 @enderror"
+                        >
+                            <option value="">اختر المشرف</option>
+                            @foreach($supervisors as $supervisor)
+                                <option value="{{ $supervisor->id }}">{{ $supervisor->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('form.supervisor_id')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
-
                 </div>
 
                 <!-- Defense Date and Grade Row -->
@@ -280,10 +268,10 @@
                         <input
                             type="date"
                             id="defenseDate"
-                            wire:model="defenseDate"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('defenseDate') border-red-500 @enderror"
+                            wire:model="form.defenseDate"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('form.defenseDate') border-red-500 @enderror"
                         >
-                        @error('defenseDate')
+                        @error('form.defenseDate')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
@@ -295,51 +283,29 @@
                         </label>
                         <select
                             id="grade"
-                            wire:model="grade"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('grade') border-red-500 @enderror"
+                            wire:model="form.grade"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('form.grade') border-red-500 @enderror"
                         >
-                            <option value="pending">لم يتم التقييم</option>
-                            <option value="A">A</option>
-                            <option value="B+">B+</option>
-                            <option value="B">B</option>
-                            <option value="C+">C+</option>
-                            <option value="C">C</option>
-                            <option value="F">F</option>
-
+                            @foreach(\App\Enums\Grade::cases() as $gradeOption)
+                                <option value="{{ $gradeOption->value }}">{{ $gradeOption->label() }}</option>
+                            @endforeach
                         </select>
-                        @error('grade')
+                        @error('form.grade')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
 
-                <!-- Keywords -->
-                {{-- <div class="mb-6">
-                    <label for="keywords" class="block text-sm font-semibold text-gray-700 mb-2">
-                        الكلمات المفتاحية <span class="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="keywords"
-                        wire:model="keywords"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('keywords') border-red-500 @enderror"
-                        placeholder="أدخل الكلمات المفتاحية مفصولة بفواصل (مثال: تعلم آلي, قواعد بيانات, تطبيقات ويب)"
-                    >
-                    @error('keywords')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div> --}}
-
                 <!-- File Upload -->
                 <div class="mb-8">
                     <label for="pdfFile" class="block text-sm font-semibold text-gray-700 mb-2">
-                        ملف المشروع (PDF) <span class="text-red-500">*</span>
+                        ملف المشروع (PDF)
                     </label>
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition @error('pdfFile') border-red-500 @enderror">
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition @error('form.pdfFile') border-red-500 @enderror">
                         <input
                             type="file"
                             id="pdfFile"
-                            wire:model="pdfFile"
+                            wire:model="form.pdfFile"
                             accept=".pdf"
                             class="hidden"
                         >
@@ -353,14 +319,14 @@
                             </p>
                             <p class="mt-1 text-xs text-gray-500">PDF فقط (الحد الأقصى: 10MB)</p>
                         </label>
-                        <div wire:loading wire:target="pdfFile">
+                        <div wire:loading wire:target="form.pdfFile">
                             جاري رفع الملف...
                         </div>
-                        @if ($pdfFile)
-                            <p class="mt-3 text-sm text-green-600 font-medium">تم اختيار: {{ $pdfFile->getClientOriginalName() }}</p>
+                        @if ($form->pdfFile)
+                            <p class="mt-3 text-sm text-green-600 font-medium">تم اختيار: {{ $form->pdfFile->getClientOriginalName() }}</p>
                         @endif
                     </div>
-                    @error('pdfFile')
+                    @error('form.pdfFile')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>

@@ -2,160 +2,66 @@
 
 namespace App\Livewire\Projects;
 
+use App\Actions\Projects\CheckProjectTitleSimilarity;
+use App\Actions\Projects\CreateProject;
+use App\Livewire\Forms\ProjectForm;
 use App\Models\Department;
-use App\Models\Project;
 use App\Models\Supervisor;
-use App\Models\Student;
-use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-
 
 class Create extends Component
 {
     use WithFileUploads;
 
-    // Form step
-    public $currentStep = 1;
+    public int $currentStep = 1;
 
-    // Step 1 fields
-    public $title = '';
-    public $summary = '';
+    public ProjectForm $form;
 
-    // Step 2 fields
-    public $students = [['name' => '', 'university_number' => '']];
-    public $supervisor_id = '';
-    public $year = '';
-    public $department_id = '';
-    public $defenseDate = '';
+    public array $similarProjects = [];
 
-    public $pdfFile;
-
-    // Data for selects
     public $supervisors = [];
     public $departments = [];
     public $years = [];
 
+    private CheckProjectTitleSimilarity $similarity;
 
-    public array $existingProjects = [];
-    public array $similarProjects = [];
 
-    public string $newTitle = "نظام متابعة مشاريع بصات";
-
-    public function updatedTitle($value)
+    public function boot(CheckProjectTitleSimilarity $similarity)
     {
-        if (strlen($value) > 5) {
-            $this->similarProjects = $this->checkProjectSimilarity($value, $this->existingProjects);
-        } else {
-            $this->similarProjects = [];
-        }
+        $this->similarity = $similarity;
     }
 
-    /**
-     * تحقق من تشابه عنوان المشروع مع المشاريع السابقة
-     *
-     * @param string $newTitle العنوان الجديد
-     * @param array $existingTitles مصفوفة عناوين المشاريع السابقة
-     * @param int $threshold نسبة التشابه المئوية لمنع التكرار (مثلاً 70)
-     * @return array يحتوي على المشاريع المشابهة مع نسبة التشابه
-     */
-    function checkProjectSimilarity(string $newTitle, array $existingTitles, int $threshold =90): array
-    {
-        $similarProjects = [];
-
-        foreach ($existingTitles as $title) {
-            // استخدام similar_text لحساب نسبة التشابه
-            similar_text($newTitle, $title, $percent);
-
-            // إذا كانت النسبة أكبر من الحد المسموح
-            if ($percent >= $threshold) {
-                $similarProjects[] = [
-                    'existing_title' => $title,
-                    'similarity' => round($percent, 2) // تقريب النسبة
-                ];
-            }
-        }
-
-        empty($similarProjects) ? $similarProjects['pass'] = true :  $similarProjects['pass'] = false;
-
-        return $similarProjects;
-    }
-
-    protected function rules()
-    {
-        $rules = [
-            'title' => 'required|string|max:150',
-            'summary' => 'required|string|min:100',
-        ];
-
-        if ($this->currentStep === 2) {
-            $rules = array_merge($rules, [
-                'students' => 'nullable|array|min:1',
-                'students.*.name' => 'nullable|string|max:255',
-                'students.*.university_number' => 'nullable|size:11|distinct|unique:students,university_number',
-                'supervisor_id' => 'required|exists:supervisors,id',
-                'year' => 'required|integer|min:2000|max:' . (date('Y') + 1),
-                'department_id' => 'required|exists:departments,id',
-                'defenseDate' => 'required|date',
-            ]);
-        }
-
-        return $rules;
-    }
-
-    protected $messages = [
-        'title.required' => 'عنوان المشروع مطلوب',
-        'title.max' => 'عنوان المشروع يجب أن لا يتجاوز 150 حرف',
-        'summary.required' => 'ملخص المشروع مطلوب',
-        'summary.min' => 'ملخص المشروع يجب أن يكون 100 حرف على الأقل',
-        'students.required' => 'يجب إدخال بيانات طالب واحد على الأقل',
-        'students.*.name.required' => 'اسم الطالب مطلوب',
-        'students.*.university_number.required' => 'الرقم الجامعي مطلوب',
-        'students.*.university_number.unique' => 'الرقم الجامعي موجود بالفعل',
-        'students.*.university_number.distinct' => 'الرقم الجامعي مكرر في النموذج',
-        'students.*.university_number.size' => 'الرقم الجامعي يجب أن يكون 11 أرقام',
-        'supervisor_id.required' => 'المشرف مطلوب',
-        'supervisor_id.exists' => 'المشرف المحدد غير موجود',
-        'year.required' => 'السنة الأكاديمية مطلوبة',
-        'department_id.required' => 'التخصص مطلوب',
-        'department_id.exists' => 'التخصص المحدد غير موجود',
-        'defenseDate.required' => 'تاريخ المناقشة مطلوب',
-        'defenseDate.date' => 'تاريخ المناقشة غير صحيح',
-    ];
 
     public function mount()
     {
-        // Load supervisors and departments
         $this->supervisors = Supervisor::all();
         $this->departments = Department::all();
-        $lastFourYears = Carbon::now()->year - 2;
-        $this->existingProjects = Project::where('year', '>=', $lastFourYears)
-            ->pluck('title')
-            ->toArray();
 
-        // Generate years (current year and 4 previous years)
-        $currentYear = date('Y');
-        for ($i = 0; $i < 5; $i++) {
-            $this->years[] = $currentYear - $i;
-        }
+        $currentYear = (int) date('Y');
+        $this->years = range($currentYear, $currentYear - 4);
+    }
+
+    public function updatedFormTitle(string $value)
+    {
+        $this->similarProjects = strlen($value) > 5
+            ? $this->similarity->search($value)
+            : [];
     }
 
     public function addStudent()
     {
-        $this->students[] = ['name' => '', 'university_number' => ''];
+        $this->form->addStudent();
     }
 
-    public function removeStudent($index)
+    public function removeStudent(int $index)
     {
-        if (count($this->students) > 1) {
-            unset($this->students[$index]);
-            $this->students = array_values($this->students); // Re-index array
-        }
+        $this->form->removeStudent($index);
     }
 
     public function nextStep()
     {
-        $this->validate([
+        $this->form->validate([
             'title' => 'required|string|max:150',
             'summary' => 'required|string|min:100',
         ]);
@@ -169,65 +75,21 @@ class Create extends Component
         $this->resetErrorBag();
     }
 
-    public function save()
+    public function save(CheckProjectTitleSimilarity $checkSimilarity, CreateProject $createProject)
     {
-
-        if (!$this->checkProjectSimilarity($this->title, $this->existingProjects)['pass']) {
+        if ($checkSimilarity->search($this->form->title) !== []) {
             session()->flash('error', 'هذا العنوان مشابه لعناوين مشاريع سابقة، يرجى اختيار عنوان آخر.');
+
             return $this->redirectRoute('projects-live.create', navigate: true);
         }
 
-        $this->validate();
+        $this->form->validate();
 
-        try {
-            // Prepare description (combine summary and keywords)
-            $description = $this->summary;
+        $createProject->execute($this->form);
 
+        session()->flash('message', 'تم حفظ المشروع بنجاح!');
 
-            // Upload PDF file
-            $pdfPath = null;
-            if ($this->pdfFile) {
-                $fileName = time() . '.pdf';
-                $pdfPath = $this->pdfFile->storeAs(
-                    'projects',
-                    $fileName,
-                    'public'
-                );
-            }
-
-            // Create project
-            $project = Project::create([
-                'title' => $this->title,
-                'description' => $description,
-                'supervisor_id' => $this->supervisor_id,
-                'department_id' => $this->department_id,
-                'year' => $this->year,
-                'submission_deadline' => $this->defenseDate,
-                'file_path' => $pdfPath,
-                'grade' => "pending",
-                'is_archiv' => false,
-            ]);
-
-            // Create students
-            foreach ($this->students as $studentData) {
-                if (trim($studentData['name']) && trim($studentData['university_number'])) {
-                    Student::create([
-                        'name' => trim($studentData['name']),
-                        'project_id' => $project->id,
-                        'department_id' => $this->department_id,
-                        'university_number' => trim($studentData['university_number']),
-                    ]);
-                }
-            }
-
-
-            // Redirect to projects index with success message
-            session()->flash('message', 'تم حفظ المشروع بنجاح!');
-
-            return $this->redirectRoute('projects-live.create', navigate: true);
-        } catch (\Exception $e) {
-            session()->flash('error', 'حدث خطأ أثناء حفظ المشروع: ' . $e->getMessage());
-        }
+        return $this->redirectRoute('projects-live.create', navigate: true);
     }
 
     public function render()

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Grade;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,6 +26,7 @@ class Project extends Model
     protected $casts = [
         'submission_deadline' => 'date',
         'is_archiv' => 'boolean',
+        'grade' => Grade::class,
     ];
 
     public function supervisor()

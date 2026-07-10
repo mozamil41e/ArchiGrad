@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Reports;
 
+use App\Enums\Grade;
 use App\Models\Department;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Computed;
@@ -18,20 +19,6 @@ class Index extends Component
 
     public $threshold = 65;
 
-    private const GRADES = [
-        'A' => 95, 'B+' => 85, 'B' => 75,
-        'C+' => 65, 'C' => 55, 'F' => 25,
-    ];
-
-    private const GRADE_COLORS = [
-        'A' => 'bg-blue-100 text-blue-800',
-        'B+' => 'bg-green-100 text-green-800',
-        'B' => 'bg-teal-100 text-teal-800',
-        'C+' => 'bg-yellow-100 text-yellow-800',
-        'C' => 'bg-orange-100 text-orange-800',
-        'F' => 'bg-red-100 text-red-800',
-    ];
-
     public function resetFilters(): void
     {
         $this->year = $this->department_id = '';
@@ -39,20 +26,12 @@ class Index extends Component
 
     public static function weightToLetter(?float $w): string
     {
-        return match (true) {
-            $w === null  => 'N/A',
-            $w >= 90     => 'A',
-            $w >= 80     => 'B+',
-            $w >= 70     => 'B',
-            $w >= 60     => 'C+',
-            $w >= 50     => 'C',
-            default      => 'F',
-        };
+        return $w === null ? 'N/A' : Grade::fromWeight($w)->value;
     }
 
     public static function gradeColor(string $letter): string
     {
-        return self::GRADE_COLORS[$letter] ?? 'bg-gray-100 text-gray-600';
+        return Grade::tryFrom($letter)?->color() ?? 'bg-gray-100 text-gray-600';
     }
 
     public function thresholdLabel(): string
@@ -69,7 +48,7 @@ class Index extends Component
     private function avgWeight($grades): ?float
     {
         $weights = $grades->filter()
-            ->map(fn($g) => self::GRADES[$g] ?? null)
+            ->map(fn (?Grade $g) => $g?->weight())
             ->filter();
 
         return $weights->isNotEmpty() ? round($weights->avg(), 2) : null;
