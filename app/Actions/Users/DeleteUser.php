@@ -11,11 +11,11 @@ class DeleteUser
     public function execute(User $user, User $actingUser): void
     {
         if ($user->is($actingUser)) {
-            throw new UserDeletionException('لا يمكنك حذف حسابك الخاص.');
+            throw UserDeletionException::cannotDeleteSelf();
         }
 
         if ($user->role === Role::Admin && User::where('role', Role::Admin->value)->count() <= 1) {
-            throw new UserDeletionException('لا يمكن حذف آخر حساب مدير في النظام.');
+            throw UserDeletionException::lastAdmin();
         }
 
         $user->delete();
