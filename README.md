@@ -7,6 +7,98 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## 🚀 خطوات تثبيت وتشغيل المشروع
+
+### 1️⃣ استنساخ المشروع (Clone)
+
+```bash
+git clone https://github.com/your-username/ArchiGrad.git
+cd ArchiGrad
+```
+
+---
+
+### 2️⃣ تثبيت الحزم (Install Dependencies)
+
+```bash
+composer install
+```
+
+---
+
+### 3️⃣ نسخ ملف البيئة (Environment Setup)
+
+```bash
+cp .env.example .env
+```
+
+> **ملاحظة:** على Windows استخدم:
+> ```bash
+> copy .env.example .env
+> ```
+
+---
+
+### 4️⃣ إعداد قاعدة البيانات
+
+افتح ملف `.env` وعدّل إعدادات قاعدة البيانات:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=archigrad
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+---
+
+### 5️⃣ توليد مفتاح التطبيق (Generate App Key)
+
+```bash
+php artisan key:generate
+```
+
+---
+
+### 6️⃣ تشغيل المايجريشن (Run Migrations)
+
+```bash
+php artisan migrate
+```
+
+> أو إذا أردت تشغيل المايجريشن مع البيانات الافتراضية (Seeders):
+> ```bash
+> php artisan migrate --seed
+> ```
+
+---
+
+### 7️⃣ تشغيل السيرفر المحلي (Run Local Server)
+
+```bash
+php artisan serve
+```
+
+افتح المتصفح على: [http://localhost:8000](http://localhost:8000)
+
+---
+
+### ✅ ملخص الخطوات كاملة
+
+```bash
+git clone https://github.com/your-username/ArchiGrad.git
+cd ArchiGrad
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan serve
+```
+
+---
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
@@ -57,3 +149,5 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
