@@ -55,27 +55,25 @@
                 <table class="w-full text-right">
                     <thead class="bg-gray-50 border-b border-gray-200">
                         <tr>
-                            <th class="px-6 py-4 text-sm font-bold text-gray-700">اسم القسم</th>
-                            <th class="px-6 py-4 text-sm font-bold text-gray-700">عدد المشرفين</th>
-                            <th class="px-6 py-4 text-sm font-bold text-gray-700">إجمالي المشاريع</th>
-                            <th class="px-6 py-4 text-sm font-bold text-gray-700">المشاريع المؤرشفة</th>
-                            <th class="px-6 py-4 text-sm font-bold text-gray-700">المشاريع الغير مؤرشفة</th>
-                            <th class="px-6 py-4 text-sm font-bold text-gray-700">عدد الطلاب</th>
-                            <th class="px-6 py-4 text-sm font-bold text-gray-700">الإجراءات</th>
+                            <x-td-table>اسم القسم</x-td-table>
+                            <x-td-table>عدد المشرفين</x-td-table>
+                            <x-td-table>إجمالي المشاريع</x-td-table>
+                            <x-td-table>المشاريع المؤرشفة</x-td-table>
+                            <x-td-table>المشاريع الغير مؤرشفة</x-td-table>
+                            <x-td-table>عدد الطلاب</x-td-table>
+                            <x-td-table>الإجراءات</x-td-table>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
                         @forelse($departments as $dept)
                             <tr class="hover:bg-gray-50 transition">
-                                <td class="px-6 py-4">
-                                    <div class="text-sm font-bold text-gray-900">{{ $dept->name }}</div>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-600">{{ $dept->supervisors_count }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-600">{{ $dept->projects_count }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-600">{{ $dept->archived_projects_count }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-600">{{ $dept->notarchived_projects_count }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-600">{{ $dept->students_count }}</td>
-                                <td class="px-6 py-4">
+                                <x-td-table>{{ $dept->name }}</x-td-table>
+                                <x-td-table>{{ $dept->supervisors_count }}</x-td-table>
+                                <x-td-table>{{ $dept->projects_count }}</x-td-table>
+                                <x-td-table>{{ $dept->archived_projects_count }}</x-td-table>
+                                <x-td-table>{{ $dept->notarchived_projects_count }}</x-td-table>
+                                <x-td-table>{{ $dept->students_count }}</x-td-table>
+                                <x-td-table>
                                     <div class="flex space-x-reverse space-x-2">
                                         <button wire:click="edit({{ $dept->id }})" class="text-blue-600 hover:text-blue-900 p-1" title="تعديل">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,7 +86,7 @@
                                             </svg>
                                         </button>
                                     </div>
-                                </td>
+                                </x-td-table>
                             </tr>
                         @empty
                             <tr>
@@ -146,10 +144,10 @@
                 </div>
 
             </div>
-
-
-
         </div>
+
+
+
     </main>
     <!-- Modal (Add/Edit) -->
     @if($showModal)
