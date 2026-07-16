@@ -85,7 +85,7 @@ class Index extends Component
 
     public function delete(DeleteUser $deleteUser): void
     {
-        $this->authorize('delete', User::class);
+        $this->authorize('delete.user');
 
         try {
             $deleteUser->execute(User::findOrFail($this->deletingId), auth()->user());

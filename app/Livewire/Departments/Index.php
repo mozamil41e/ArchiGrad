@@ -48,6 +48,7 @@ class Index extends Component
 
     public function save(CreateDepartment $createDepartment, UpdateDepartment $updateDepartment): void
     {
+        $this->authorize('create.department');
         $this->form->validate();
 
         if ($this->isEditMode) {
@@ -69,6 +70,7 @@ class Index extends Component
 
     public function delete(DeleteDepartment $deleteDepartment): void
     {
+        abort_unless( auth()->user()->can('department.delete'), 403);
         $deleteDepartment->execute(Department::findOrFail($this->deletingId));
         $this->confirmingDeletion = false;
         session()->flash('message', 'تم حذف القسم بنجاح.');

@@ -10,21 +10,21 @@ class ProjectPolicy
 {
     public function before(User $user, string $ability): ?bool
     {
-        return $user->role === Role::Admin ? true : null;
+        return $user->hasRole('admin') ? true : null;
     }
 
     public function delete(User $user, Project $project): bool
     {
-        return false;
+        return $user->hasRole('admin') ? true : false;
     }
 
     public function archive(User $user, Project $project): bool
     {
-        return false;
+        return $user->hasRole('admin') ? true : false;
     }
 
     public function unarchive(User $user, Project $project): bool
     {
-        return false;
+        return $user->hasRole('admin') ? true : false;
     }
 }

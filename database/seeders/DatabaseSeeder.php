@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Hash;
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
@@ -25,27 +25,27 @@ class DatabaseSeeder extends Seeder
         DB::table('students')->truncate();
         DB::table('users')->truncate();
 
-
-        User::factory()->create([
-            'name' => 'منسق المشاريع',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
-            'role' => Role::Admin,
-        ]);
-
-        User::factory()->create([
-            'name' => 'مستخدم عادي',
-            'email' => 'user@example.com',
-            'password' => bcrypt('password'),
-            'role' => Role::User,
-        ]);
-
-
-        $this->call([
+ $this->call([
+            RolesAndPermissionsSeeder::class,
+            AdminSeeder::class,
             DepartmentSeeder::class,
             SupervisorSeeder::class,
             ProjectSeeder::class,
             StudentSeeder::class,
         ]);
+
+        $user = User::firstOrCreate(
+            [
+                'email' => 'user@example.com',
+            ],
+            [
+                'name' => 'system user',
+                'password' => Hash::make('password'),
+            ]
+        );
+
+        $user->assignRole('user1');
+
+
     }
 }

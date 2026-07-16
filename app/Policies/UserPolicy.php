@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\Role;
+
 use App\Models\User;
 
 class UserPolicy
@@ -12,23 +12,23 @@ class UserPolicy
      */
     public function before(User $user, string $ability): bool
     {
-        return $user->role === Role::Admin;
+        return $user->hasRole('admin');
     }
 
     public function viewAny(User $user): bool
     {
-        return $user->role === Role::Admin;
+        return $user->hasRole('admin');
     }
     public function create(User $user): bool
     {
-        return $user->role === Role::Admin;
+        return $user->hasRole('admin');
     }
     public function update(User $user): bool
     {
-        return $user->role === Role::Admin;
+        return $user->hasRole('admin');
     }
     public function delete(User $user): bool
     {
-        return $user->role === Role::Admin;
+        return $user->hasRole('admin');
     }
 }
