@@ -3,6 +3,7 @@
 namespace App\Livewire\Supervisors;
 
 use App\Actions\Supervisors\CreateSupervisor;
+use App\Actions\Supervisors\DeleteSupervisor;
 use App\Actions\Supervisors\UpdateSupervisor;
 use App\Livewire\Forms\SupervisorForm;
 use App\Models\Department;
@@ -23,7 +24,7 @@ class Index extends Component
 
     public SupervisorForm $form;
 
-    protected $listeners = ['itemDeleted' => 'handleItemDeleted'];
+    protected $listeners = ['deleteConfirmed' => 'deleteSupervisor'];
 
     public function openModal(): void
     {
@@ -61,20 +62,19 @@ class Index extends Component
         $this->closeModal();
     }
 
-    public function handleItemDeleted(string $message): void
-    {
-        session()->flash('message', $message);
-    }
-
     public function confirmDelete(int $id): void
     {
         $this->dispatch('confirmDelete',
             id: $id,
-            modelClass: Supervisor::class,
             title: 'حذف المشرف',
             message: 'هل أنت متأكد من حذف هذا المشرف؟ لا يمكن التراجع عن هذا الإجراء وسيتم حذف كافة البيانات المرتبطة.',
-            successMessage: 'تم حذف المشرف بنجاح.',
         );
+    }
+
+    public function deleteSupervisor(int $id, DeleteSupervisor $deleteSupervisor): void
+    {
+        $deleteSupervisor->execute(Supervisor::findOrFail($id));
+        session()->flash('message', 'تم حذف المشرف بنجاح.');
     }
 
     public function render()

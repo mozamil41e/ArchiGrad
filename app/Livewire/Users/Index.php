@@ -26,7 +26,7 @@ class Index extends Component
 
     public UserForm $form;
 
-    protected $listeners = ['itemDeleted' => 'handleItemDeleted'];
+    protected $listeners = ['deleteConfirmed' => 'deleteUser'];
 
     public function mount(): void
     {
@@ -75,36 +75,27 @@ class Index extends Component
         $this->closeModal();
     }
 
-    public function handleItemDeleted(string $message): void
-    {
-        session()->flash('message', $message);
-    }
-
     public function confirmDelete(int $id): void
     {
         $this->authorize('delete', User::class);
         $this->dispatch('confirmDelete',
             id: $id,
-            modelClass: User::class,
             title: 'حذف المستخدم',
             message: 'هل أنت متأكد من حذف هذا المستخدم؟ لا يمكن التراجع عن هذا الإجراء.',
-            successMessage: 'تم حذف المستخدم بنجاح.',
         );
     }
 
-    // public function delete(DeleteUser $deleteUser): void
-    // {
-    //     $this->authorize('delete', User::class);
-    //     try {
-    //         $deleteUser->execute(User::findOrFail($this->deletingId), auth()->user());
-    //     } catch (UserDeletionException $e) {
-    //         session()->flash('error', $e->getMessage());
-    //         $this->confirmingDeletion = false;
-    //         return;
-    //     }
-    //     $this->confirmingDeletion = false;
-    //     session()->flash('message', 'تم حذف المستخدم بنجاح.');
-    // }
+    public function deleteUser(int $id, DeleteUser $deleteUser): void
+    {
+        $this->authorize('delete', User::class);
+        try {
+            $deleteUser->execute(User::findOrFail($id), auth()->user());
+        } catch (UserDeletionException $e) {
+            session()->flash('error', $e->getMessage());
+            return;
+        }
+        session()->flash('message', 'تم حذف المستخدم بنجاح.');
+    }
 
     public function render()
     {

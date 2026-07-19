@@ -3,6 +3,7 @@
 namespace App\Livewire\Departments;
 
 use App\Actions\Departments\CreateDepartment;
+use App\Actions\Departments\DeleteDepartment;
 use App\Actions\Departments\UpdateDepartment;
 use App\Livewire\Forms\DepartmentForm;
 use App\Models\Department;
@@ -22,7 +23,7 @@ class Index extends Component
 
     public DepartmentForm $form;
 
-    protected $listeners = ['itemDeleted' => 'handleItemDeleted'];
+    protected $listeners = ['deleteConfirmed' => 'deleteDepartment'];
 
     public function openModal(): void
     {
@@ -60,20 +61,19 @@ class Index extends Component
         $this->closeModal();
     }
 
-    public function handleItemDeleted(string $message): void
-    {
-        session()->flash('message', $message);
-    }
-
     public function confirmDelete(int $id): void
     {
         $this->dispatch('confirmDelete',
             id: $id,
-            modelClass: \App\Models\Department::class,
             title: 'حذف القسم',
             message: 'هل أنت متأكد من حذف هذا القسم؟ لا يمكن التراجع عن هذا الإجراء وسيتم حذف كافة البيانات المرتبطة.',
-            successMessage: 'تم حذف القسم بنجاح.',
         );
+    }
+
+    public function deleteDepartment(int $id, DeleteDepartment $deleteDepartment): void
+    {
+        $deleteDepartment->execute(Department::findOrFail($id));
+        session()->flash('message', 'تم حذف القسم بنجاح.');
     }
 
     public function render()
