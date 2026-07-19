@@ -81,7 +81,7 @@ class Create extends Component
 
     public function save(CheckProjectTitleSimilarity $checkSimilarity, CreateProject $createProject)
     {
-        $this->authorize('create', Project::class);
+        $this->authorize('create');
         if ($checkSimilarity->search($this->form->title) !== []) {
             session()->flash('error', 'هذا العنوان مشابه لعناوين مشاريع سابقة، يرجى اختيار عنوان آخر.');
 
