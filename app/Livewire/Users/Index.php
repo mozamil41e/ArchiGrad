@@ -23,10 +23,10 @@ class Index extends Component
 
     public bool $showModal = false;
     public bool $isEditMode = false;
-    public bool $confirmingDeletion = false;
 
     public UserForm $form;
-    public ?int $deletingId = null;
+
+    protected $listeners = ['deleteConfirmed' => 'deleteUser'];
 
     public function mount(): void
     {
@@ -78,25 +78,24 @@ class Index extends Component
     public function confirmDelete(int $id): void
     {
         $this->authorize('delete', User::class);
-
-        $this->deletingId = $id;
-        $this->confirmingDeletion = true;
+        $this->dispatch('confirmDelete',
+            id: $id,
+            title: 'حذف المستخدم',
+            message: 'هل أنت متأكد من حذف هذا المستخدم؟ لا يمكن التراجع عن هذا الإجراء.',
+        );
     }
 
-    public function delete(DeleteUser $deleteUser): void
+    public function deleteUser(int $id, DeleteUser $deleteUser): void
     {
-        $this->authorize('delete.user');
+
+        $this->authorize('delete', User::class);
 
         try {
-            $deleteUser->execute(User::findOrFail($this->deletingId), auth()->user());
+            $deleteUser->execute(User::findOrFail($id), auth()->user());
         } catch (UserDeletionException $e) {
             session()->flash('error', $e->getMessage());
-            $this->confirmingDeletion = false;
-
             return;
         }
-
-        $this->confirmingDeletion = false;
         session()->flash('message', 'تم حذف المستخدم بنجاح.');
     }
 

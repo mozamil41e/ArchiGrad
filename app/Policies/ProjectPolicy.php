@@ -15,7 +15,12 @@ class ProjectPolicy
 
     public function delete(User $user, Project $project): bool
     {
-        return $user->hasRole('admin') ? true : false;
+        return false; // Admin فقط عبر before()
+    }
+
+    public function create(User $user, Project $project): bool
+    {
+        return false;
     }
 
     public function archive(User $user, Project $project): bool

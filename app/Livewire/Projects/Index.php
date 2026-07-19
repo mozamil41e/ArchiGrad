@@ -17,16 +17,16 @@ class Index extends Component
     #[Url(history: true)]
     public $search = '';
 
-    #[Url(history: true)]
+    #[Url(history: true, except: '')]
     public $year;
 
-    #[Url(history: true)]
+    #[Url(history: true, except: '')]
     public $department_id;
 
-    #[Url(history: true)]
+    #[Url(history: true, except: '')]
     public $supervisor_id;
 
-    #[Url(history: true)]
+    #[Url(history: true, except: '')]
     public $is_active;
 
 

@@ -21,10 +21,10 @@ class Index extends Component
 
     public bool $showModal = false;
     public bool $isEditMode = false;
-    public bool $confirmingDeletion = false;
 
     public SupervisorForm $form;
-    public ?int $deletingId = null;
+
+    protected $listeners = ['deleteConfirmed' => 'deleteSupervisor'];
 
     public function openModal(): void
     {
@@ -64,14 +64,16 @@ class Index extends Component
 
     public function confirmDelete(int $id): void
     {
-        $this->deletingId = $id;
-        $this->confirmingDeletion = true;
+        $this->dispatch('confirmDelete',
+            id: $id,
+            title: 'حذف المشرف',
+            message: 'هل أنت متأكد من حذف هذا المشرف؟ لا يمكن التراجع عن هذا الإجراء وسيتم حذف كافة البيانات المرتبطة.',
+        );
     }
 
-    public function delete(DeleteSupervisor $deleteSupervisor): void
+    public function deleteSupervisor(int $id, DeleteSupervisor $deleteSupervisor): void
     {
-        $deleteSupervisor->execute(Supervisor::findOrFail($this->deletingId));
-        $this->confirmingDeletion = false;
+        $deleteSupervisor->execute(Supervisor::findOrFail($id));
         session()->flash('message', 'تم حذف المشرف بنجاح.');
     }
 

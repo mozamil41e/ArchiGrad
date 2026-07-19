@@ -20,10 +20,10 @@ class Index extends Component
 
     public bool $showModal = false;
     public bool $isEditMode = false;
-    public bool $confirmingDeletion = false;
 
     public DepartmentForm $form;
-    public ?int $deletingId = null;
+
+    protected $listeners = ['deleteConfirmed' => 'deleteDepartment'];
 
     public function openModal(): void
     {
@@ -64,15 +64,17 @@ class Index extends Component
 
     public function confirmDelete(int $id): void
     {
-        $this->deletingId = $id;
-        $this->confirmingDeletion = true;
+        $this->dispatch('confirmDelete',
+            id: $id,
+            title: 'حذف القسم',
+            message: 'هل أنت متأكد من حذف هذا القسم؟ لا يمكن التراجع عن هذا الإجراء وسيتم حذف كافة البيانات المرتبطة.',
+        );
     }
 
-    public function delete(DeleteDepartment $deleteDepartment): void
+    public function deleteDepartment(int $id, DeleteDepartment $deleteDepartment): void
     {
-        abort_unless( auth()->user()->can('department.delete'), 403);
-        $deleteDepartment->execute(Department::findOrFail($this->deletingId));
-        $this->confirmingDeletion = false;
+        // $this->authorize('delete.department');
+        $deleteDepartment->execute(Department::findOrFail($id));
         session()->flash('message', 'تم حذف القسم بنجاح.');
     }
 
