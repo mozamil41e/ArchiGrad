@@ -15,6 +15,11 @@ class ProjectPolicy
 
     public function delete(User $user, Project $project): bool
     {
+        return false; // Admin فقط عبر before()
+    }
+
+    public function create(User $user, Project $project): bool
+    {
         return false;
     }
 

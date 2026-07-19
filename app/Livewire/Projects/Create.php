@@ -6,13 +6,17 @@ use App\Actions\Projects\CheckProjectTitleSimilarity;
 use App\Actions\Projects\CreateProject;
 use App\Livewire\Forms\ProjectForm;
 use App\Models\Department;
+use App\Models\Project;
 use App\Models\Supervisor;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Livewire\Attributes\Model;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+
 class Create extends Component
 {
-    use WithFileUploads;
+    use AuthorizesRequests, WithFileUploads;
 
     public int $currentStep = 1;
 
@@ -77,6 +81,7 @@ class Create extends Component
 
     public function save(CheckProjectTitleSimilarity $checkSimilarity, CreateProject $createProject)
     {
+        $this->authorize('create', Project::class);
         if ($checkSimilarity->search($this->form->title) !== []) {
             session()->flash('error', 'هذا العنوان مشابه لعناوين مشاريع سابقة، يرجى اختيار عنوان آخر.');
 
